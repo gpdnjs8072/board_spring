@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<!-- 회원가입 -->
+	<insert id="insert" parameterType="memberDto"> 
+		INSERT INTO member
+		(mem_id,mem_pwd,mem_email,mem_name)
+		VALUES(#{mem_id},#{mem_pwd},#{mem_email},#{mem_name})
+	</insert>
+	<!-- 아이디 중복체크 -->
+	<select id="isExistId" parameterType="String" resultType="String">
+		SELECT mem_id
+		 FROM member
+		WHERE mem_id=#{mem_id}
+	</select>
+	<!-- 로그인 -->
+	<select  id="isValid" parameterType="memberDto" resultType="memberDto">
+		SELECT mem_id,mem_stateCode,mem_authCode,mem_loginFailCount 
+		FROM member
+		WHERE mem_id=#{mem_id} and mem_pwd=#{mem_pwd}
+	</select>
+	<!-- 비밀번호 존재 확인 -아이디가 있는지 확인 -->
+	<select id="selectPwdHash" parameterType="String" resultType="String">
+		SELECT mem_pwd
+		FROM member
+		WHERE mem_id=#{mem_id}
+	</select>
+	<!-- 로그인 실패 횟수 증가 -->
+	<update id="updateCount" parameterType="String"  >
+		UPDATE member
+		SET mem_loginFailCount =mem_loginFailCount+1
+		WHERE mem_id=#{mem_id}
+	</update>
+	<!-- 로그인 실패 횟수 원상복귀 -->
+	<update id="updateOriCount" parameterType="String">
+		UPDATE member
+		SET mem_loginFailCount=0
+		WHERE mem_id=#{mem_id}
+	</update>
+	<!-- 회원 상태 '정지'로 변경 -->
+	<update id="updateStateCode" parameterType="String">
+		UPDATE member
+		SET mem_stateCode='102'
+		WHERE mem_id=#{mem_id} and mem_loginFailCount >=5
+	</update>
+	<!-- 회원 한명의 정보 -->
+	<select  id="selectMember" parameterType="String" resultType="memberDto">
+		SELECT mem_id,mem_pwd,mem_email,mem_name,
+					mem_stateCode,mem_authCode,mem_regdate,mem_loginFailCount
+		FROM member
+		WHERE mem_id=#{mem_id}
+	</select>
+	<!-- 아이디 찾기 -->
+	<select id="searchId" parameterType="memberDto" resultType="String" >
+		SELECT mem_id
+		FROM member
+		WHERE mem_name=#{mem_name} and mem_email=#{mem_email}
+	</select>
+	<!-- 비밀번호 찾기 가능 -->
+	<select id="searchPwd" parameterType="MemberDto" resultType="String">
+		SELECT mem_id
+		FROM member
+		WHERE mem_id=#{mem_id} and mem_name=#{mem_name} and mem_email=#{mem_email}
+	</select>
+	<!-- 새 비밀번호로 변경 -->
+	<update id="changePwd" parameterType="MemberDto">
+		UPDATE member
+		SET mem_pwd=#{mem_pwd}
+		WHERE mem_id=#{mem_id}
+	</update>
+	<!-- 회원 정보 수정 -->
+	<update id="updateMember" parameterType="MemberDto">
+		UPDATE member
+		SET mem_pwd=#{mem_pwd},mem_name=#{mem_name},mem_email=#{mem_email}
+		WHERE mem_id=#{mem_id}
+	</update>
+	<!-- 회원 정보 코드명 자세히 -->
+	<select id="detailMember" parameterType="String" resultType="MemberDto">
+		SELECT r.*,t.authName
+		FROM
+				(SELECT mem_id,mem_name,mem_email,mem_regdate,co_name stateName
+				 FROM member JOIN codeDetail
+				 ON member.mem_stateCode=codeDetail.co_code
+				 WHERE mem_id=#{mem_id}) r JOIN 
+				 
+				(SELECT mem_id,co_name authName
+				FROM member u JOIN codeDetail d
+				ON u.mem_authCode=d.co_code
+				WHERE mem_id=#{mem_id}) t
+				
+		ON r.mem_id=t.mem_id 
+		ORDER BY mem_regdate DESC
+	</select>
+	
+	<!-- Admin  -->
+	<!-- 회원 목록(조건 2개) -->
+	<select  id="selectMemberList" resultType="MemberDto">
+		<include refid="pagingHeader"></include>
+			SELECT r.*,t.authName
+			FROM
+					(SELECT mem_id,mem_name,mem_email,mem_regdate,mem_authCode,co_name stateName
+					 FROM member JOIN codeDetail
+					 ON member.mem_stateCode=codeDetail.co_code) r JOIN  
+					(SELECT mem_id,co_name authName
+					 FROM member u JOIN codeDetail d
+					 ON u.mem_authCode=d.co_code) t
+			ON r.mem_id=t.mem_id 
+		<include refid="search"></include>
+			ORDER BY mem_regdate DESC
+		<include refid="pagingFooter"></include> 	
+	</select>
+	
+	<!-- 검색에 따른 목록 갯수 -->
+	<select  id="count" resultType="int">
+		SELECT count(*) as count
+		FROM member
+		<include refid="search"></include>
+	</select>
+	
+	<!-- 검색조건 sql -->
+	
+	<sql id="search">
+		<choose>
+			<when test="searchOption=='all'">
+				WHERE mem_id like '%'||#{keyword}||'%'
+				OR mem_stateCode like '%'||#{keyword}||'%'
+				OR mem_authCode like '%'||#{keyword}||'%'
+				<if test="mem_authCode!=null">
+					AND (r.mem_authCode=#{mem_authCode})
+				</if>
+			</when>
+			<!-- 전체 검색이 아닐 경우 -->
+	
+			<when test="searchOption=='mem_id'">
+				WHERE ${searchOption} like '%'||#{keyword}||'%'
+				<if test="mem_authCode!=null">
+					AND (r.mem_authCode=#{mem_authCode})
+				</if>
+			</when>
+			<when test="searchOption=='mem_email'">
+				WHERE ${searchOption} like '%'||#{keyword}||'%'
+				<if test="mem_authCode!=null">
+					AND (r.mem_authCode=#{mem_authCode})
+				</if>
+			</when>
+			<when test="searchOption=='mem_name'">
+				WHERE ${searchOption} like '%'||#{keyword}||'%'
+				<if test="mem_authCode!=null">
+					AND (r.mem_authCode=#{mem_authCode})
+				</if>
+			</when>
+			<otherwise>
+				<if test="mem_authCode!=null">
+					WHERE r.mem_authCode=#{mem_authCode}
+				</if>
+			</otherwise>
+		</choose>
+		
+	</sql>
+	
+	<sql id="pagingHeader">
+		SELECT * 
+		FROM (SELECT ROWNUM as rn, A.* FROM(
+	</sql>
+	<sql id="pagingFooter">
+			) A
+		)WHERE rn BETWEEN #{start} AND #{end}
+	</sql>
+	
+	<!-- 회원 상태/권한 변경 -->
+	<update id="updateCode" parameterType="memberDto">
+		UPDATE member
+		SET mem_stateCode=#{mem_stateCode},mem_authCode=#{mem_authCode} 
+		WHERE mem_id=#{mem_id}
+	</update>
+</mapper>
