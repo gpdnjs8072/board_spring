@@ -114,7 +114,47 @@
 	<select  id="count" resultType="int">
 		SELECT count(*) as count
 		FROM member
-		<include refid="search"></include>
+		<choose>
+			<when test="keyword!=null">
+				<choose>
+					<when test="searchOption == 'all'">
+						WHERE mem_id like '%'||#{keyword}||'%'
+						OR mem_email like '%'||#{keyword}||'%'
+						OR mem_name like '%'||#{keyword}||'%'
+						<if test="mem_authCode!=null">
+							AND (mem_authCode=#{mem_authCode})
+						</if>
+					</when>
+					<!-- 전체 검색이 아닐 경우 -->
+			
+					<when test="searchOption == 'mem_id'">
+						WHERE mem_id like '%'||#{keyword}||'%'
+						<if test="mem_authCode!=null">
+							AND (mem_authCode=#{mem_authCode})
+						</if>
+					</when>
+					<when test="searchOption == 'mem_email'">
+						WHERE mem_email like '%'||#{keyword}||'%'
+						<if test="mem_authCode!=null">
+							AND (mem_authCode=#{mem_authCode})
+						</if>
+					</when>
+					<when test="searchOption == 'mem_name'">
+						WHERE mem_name like '%'||#{keyword}||'%'
+						<if test="mem_authCode!=null">
+							AND (mem_authCode=#{mem_authCode})
+						</if>
+					</when>
+				</choose>
+			</when>
+			<when test="keyword==null">
+			
+				<if test="mem_authCode!=null">
+					WHERE mem_authCode=#{mem_authCode}
+				</if>
+
+			</when>
+		</choose>
 	</select>
 	
 	<!-- 검색조건 sql -->
@@ -122,9 +162,9 @@
 	<sql id="search">
 		<choose>
 			<when test="searchOption=='all'">
-				WHERE mem_id like '%'||#{keyword}||'%'
-				OR mem_stateCode like '%'||#{keyword}||'%'
-				OR mem_authCode like '%'||#{keyword}||'%'
+				WHERE r.mem_id like '%'||#{keyword}||'%'
+				OR r.mem_email like '%'||#{keyword}||'%'
+				OR r.mem_name like '%'||#{keyword}||'%'
 				<if test="mem_authCode!=null">
 					AND (r.mem_authCode=#{mem_authCode})
 				</if>
@@ -132,19 +172,19 @@
 			<!-- 전체 검색이 아닐 경우 -->
 	
 			<when test="searchOption=='mem_id'">
-				WHERE ${searchOption} like '%'||#{keyword}||'%'
+				WHERE r.mem_id like '%'||#{keyword}||'%'
 				<if test="mem_authCode!=null">
 					AND (r.mem_authCode=#{mem_authCode})
 				</if>
 			</when>
 			<when test="searchOption=='mem_email'">
-				WHERE ${searchOption} like '%'||#{keyword}||'%'
+				WHERE r.mem_email like '%'||#{keyword}||'%'
 				<if test="mem_authCode!=null">
 					AND (r.mem_authCode=#{mem_authCode})
 				</if>
 			</when>
 			<when test="searchOption=='mem_name'">
-				WHERE ${searchOption} like '%'||#{keyword}||'%'
+				WHERE r.mem_name like '%'||#{keyword}||'%'
 				<if test="mem_authCode!=null">
 					AND (r.mem_authCode=#{mem_authCode})
 				</if>

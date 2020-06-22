@@ -22,8 +22,8 @@
 		<label for="board_content">내용</label> 
 		<textarea name="board_content" id="board_content" required="required"></textarea><br />
 		 
-		<label for="file">첨부파일</label>
-		<input type="file" name="file" id="file"/><br />
+		<label for="file1">첨부파일</label>
+		<input type="file" name="file1" id="file1"/><br />
 		
 	<c:choose>
 		<c:when test="${board_typeCode eq '201'}">

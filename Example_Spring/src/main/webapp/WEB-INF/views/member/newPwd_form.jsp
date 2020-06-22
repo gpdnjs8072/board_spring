@@ -31,14 +31,7 @@
 		<button type="submit" id="changeBtn">비밀번호 변경</button>
 	</form>
 	<script>
-		$("#changeBtn").click(function(){
-			var pwd=$("#mem_pwd").val();
-			var pwd2=$("#mem_pwd2").val();
-			if(pwd!=pwd2){
-				alert("비밀번호가 일치하지 않습니다.");
-				return false;
-			}
-		})
+	
 		$("#changeBtn").on("click",function(){
 			var pwd=$("#mem_pwd").text();
 			var pwd2=$("#mem_pwd2").text();

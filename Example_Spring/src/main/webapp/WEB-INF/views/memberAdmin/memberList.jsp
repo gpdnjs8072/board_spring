@@ -19,7 +19,7 @@
 	//+"&searchOption=${map.searchOption}"+"&keyword=${map.keyword}"+"&mem_authCode=${map.mem_authCode}"
 	// 원하는 페이지로 이동시 검색조건, 키워드 값을 유지하기 위해 
 	function list(page){
-		location.href="/Example/memberAdmin/memberList.do?curPage="+page+"&searchOption=${map2.searchOption}"+"&keyword=${map2.keyword}"+"&mem_authCode=${map2.mem_authCode}";
+		location.href="/Example_Spring/memberAdmin/memberList.do?curPage="+page+"&searchOption=${map2.searchOption}"+"&keyword=${map2.keyword}"+"&mem_authCode=${map2.mem_authCode}";
 	}
 </script>
 <br />	

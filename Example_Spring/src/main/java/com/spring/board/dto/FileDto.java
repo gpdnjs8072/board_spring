@@ -1,5 +1,7 @@
 package com.spring.board.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class FileDto {
 	private int file_num;
 	private int board_num;
@@ -8,6 +10,7 @@ public class FileDto {
 	private String file_saveName;
 	private Long file_size;
 	private String file_time;
+	
 	
 	public FileDto() {}
 
@@ -21,6 +24,7 @@ public class FileDto {
 		this.file_saveName = file_saveName;
 		this.file_size = file_size;
 		this.file_time = file_time;
+		
 	}
 
 	public int getFile_num() {
@@ -78,7 +82,7 @@ public class FileDto {
 	public void setFile_time(String file_time) {
 		this.file_time = file_time;
 	}
-	
-	
+
+
 	
 }

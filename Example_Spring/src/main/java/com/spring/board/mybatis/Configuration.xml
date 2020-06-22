@@ -7,12 +7,13 @@
   		<typeAlias type="com.spring.board.dto.MemberDto" alias="memberDto"/>
   		<typeAlias type="com.spring.board.dto.BoardDto" alias="boardDto"/>
   		<typeAlias type="com.spring.board.dto.FileDto" alias="fileDto"/>
-
+	
   	</typeAliases>
   	<mappers>
   		<mapper resource="com/spring/board/mybatis/MemberMapper.xml"/>
   		<mapper resource="com/spring/board/mybatis/BoardMapper.xml"/>
   		<mapper resource="com/spring/board/mybatis/FileMapper.xml"/>
+  		<mapper resource="com/spring/board/mybatis/CodeMapper.xml"/>
   		
   	</mappers>	
   </configuration>

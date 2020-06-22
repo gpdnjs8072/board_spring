@@ -35,7 +35,7 @@
 		<c:if test="${not empty fileDto.file_oriName }">
 			<tr>
 				<th>첨부파일</th>
-				<td><a href="private/download.do?board_typeCode=${dto.board_typeCode }&file_num=${ fileDto.file_num}&board_num=${dto.board_num}">${fileDto.file_oriName }</a></td>
+				<td><a href="private/download.do?board_typeCode=${dto.board_typeCode }&file_num=${fileDto.file_num}&board_num=${dto.board_num}">${fileDto.file_oriName }</a></td>
 			</tr>
 		
 		</c:if>

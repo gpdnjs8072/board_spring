@@ -19,14 +19,24 @@
 		<div class="collapse navbar-collapse" id="one">
 			<ul class="nav navbar-nav">
 				<li>
-					<a href="${pageContext.request.contextPath }/board/list.do ">
-						board
+					<a href="${pageContext.request.contextPath }/board/list.do?board_typeCode=201 ">
+						공지사항
+					</a>
+				</li>
+				<li>
+					<a href="${pageContext.request.contextPath }/board/list.do?board_typeCode=202 ">
+						Q&A
+					</a>
+				</li>
+				<li>
+					<a href="${pageContext.request.contextPath }/board/list.do?board_typeCode=203">
+						자유게시판
 					</a>
 				</li>
 				<c:if test="${sessionScope.mem_authCode eq '002' }">
 					<li>
 						<a href="${pageContext.request.contextPath }/memberAdmin/memberList.do ">
-							회원관리
+							회원목록
 						</a>
 					</li>
 				</c:if>

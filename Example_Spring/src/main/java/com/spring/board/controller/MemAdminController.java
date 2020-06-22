@@ -22,8 +22,8 @@ public class MemAdminController {
 	
 	@RequestMapping(value="/memberAdmin/memberList",method= {RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView memberList(ModelAndView mView, HttpServletRequest request,
-									@RequestParam(defaultValue="") String searchOption,
-									@RequestParam(defaultValue="") String mem_authCode,
+									@RequestParam(defaultValue="mem_id") String searchOption,
+									@RequestParam(defaultValue="001") String mem_authCode,
 									@RequestParam(defaultValue="") String keyword,
 									@RequestParam(defaultValue="1") int curPage
 									) throws Exception{

@@ -7,7 +7,7 @@
 	<name>Example_Spring</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
-<properties>
+	<properties>
 		<java-version>1.8</java-version>
 		<org.springframework-version>4.0.0.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
@@ -144,6 +144,11 @@
 			<version>4.0.0.RELEASE</version>
 		</dependency>
 		<!-- 파일업로드 처리를 위한 라이브러리 (SmartEditor 에서도 필요함)-->
+		<dependency>
+	        <groupId>commons-io</groupId>
+	        <artifactId>commons-io</artifactId>
+	        <version>2.0.1</version>
+	    </dependency>
 	  	<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>

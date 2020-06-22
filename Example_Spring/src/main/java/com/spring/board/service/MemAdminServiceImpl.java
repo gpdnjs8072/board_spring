@@ -26,13 +26,31 @@ public class MemAdminServiceImpl implements MemAdminService{
 									String searchOption, String keyword, String mem_authCode,
 									int curPage) {
 		
-		
+		System.out.println("searchOption : "+searchOption);
+		System.out.println("keyword : "+keyword);
+		System.out.println("mem_authCode : "+mem_authCode);
+		System.out.println("curPage : "+curPage);
+		if(keyword=="") {
+			keyword=null;
+		}
+		if(searchOption=="") {
+			searchOption=null;
+		}
+		if(mem_authCode=="") {
+			mem_authCode=null;
+		}
+		System.out.println("searchOption : "+searchOption);
+		System.out.println("keyword : "+keyword);
+		System.out.println("mem_authCode : "+mem_authCode);
+		System.out.println("curPage : "+curPage);
+		System.out.println("isNull : "+searchOption.isEmpty());
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("searchOption", searchOption);
 		map.put("keyword", keyword);
 		map.put("mem_authCode",mem_authCode);
 		//해당 검색조건과 일치하는 목록의 갯수
 		int count=session.selectOne("member.count", map);  
+		System.out.println("count : "+count);
 		// 페이지 나누기 관련 처리  PagingDto(count,curPage,페이지당 게시물 수 ,화면당 페이지수)
 		PagingDto pagingDto = new PagingDto(count, curPage,3,5);
 		int start = pagingDto.getPageBegin();
@@ -40,14 +58,14 @@ public class MemAdminServiceImpl implements MemAdminService{
 		map.put("start", start);
 		map.put("end", end);
 		List<MemberDto> list=session.selectList("member.selectMemberList",map);
-		
+		System.out.println("list : "+list.size());
 		Map<String, Object> map2=new HashMap<String, Object>();
-		map.put("list", list);
-		map.put("count", count); // 레코드의 갯수
-		map.put("searchOption", searchOption); // 검색옵션
-		map.put("mem_authCode", mem_authCode); // 검색옵션
-		map.put("keyword", keyword); // 검색키워드
-		map.put("pagingDto", pagingDto);
+		map2.put("list", list);
+		map2.put("count", count); // 레코드의 갯수
+		map2.put("searchOption", searchOption); // 검색옵션
+		map2.put("mem_authCode", mem_authCode); // 검색옵션
+		map2.put("keyword", keyword); // 검색키워드
+		map2.put("pagingDto", pagingDto);
 		
 		request.setAttribute("map2", map2);
 		

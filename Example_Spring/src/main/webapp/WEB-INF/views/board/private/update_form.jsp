@@ -13,6 +13,7 @@
       <input type="hidden" name="board_num" value="${dto.board_num }" />
       <input type="hidden" name="saveFile" value="${fileDto.file_oriName }" />
       <input type="hidden" name="board_typeCode" value="${dto.board_typeCode }" />
+      <input type="hidden" name="board_writer" value="${dto.board_writer }" />
      <div >
          <label for="board_title">글제목</label>
          <input  type="text" id="board_title" name="board_title" value="${dto.board_title }" required="required"/>
@@ -22,8 +23,8 @@
          <textarea  name="board_content" id="board_content" required="required">${dto.board_content }</textarea>
       </div>
       <div>
-      	<label for="file">첨부파일</label>
-      	<input type="file" name="file" id="file" />
+      	<label for="file1">첨부파일</label>
+      	<input type="file" name="file1" id="file1" />
       </div>
       <button type="submit" onclick="submitContents(this);">수정확인</button>
       <button onclick="historyback();">취소</button>

@@ -61,7 +61,6 @@ create table board(
 	board_writer varchar2(30) not null,
 	board_content CLOB,
 	board_typeCode varchar2(30) not null,
-	board_viewCount number default '0',
 	board_time date default sysdate,
 	file_saveName varchar2(100) is null
 );

@@ -2,4 +2,99 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="board">
 	
+	<insert id="insert1" parameterType="boardDto" >
+		INSERT INTO board
+		(board_num,board_title,board_writer,board_content,board_typeCode,board_time)
+		VALUES(board_num_seq.NEXTVAL,#{board_title},#{board_writer},#{board_content},#{board_typeCode},SYSDATE)
+	</insert>
+	<insert id="insert2" parameterType="boardDto">
+		INSERT INTO board
+		(board_num,board_title,board_writer,board_content,board_typeCode,board_time,file_saveName)
+		VALUES(board_num_seq.NEXTVAL,#{board_title},#{board_writer},#{board_content},#{board_typeCode},SYSDATE,#{file_saveName})
+	</insert>
+	<select id="getBoardNum" parameterType="String" resultType="int">
+		SELECT board_num
+		FROM board
+		WHERE file_saveName=#{file_saveName}
+	</select>
+	<select  id="detail" parameterType="int" resultType="boardDto">
+		SELECT board_num,board_title,board_writer,board_content,board_typeCode,board_viewCount,board_time,file_saveName
+		FROM board
+		WHERE board_num=#{board_num}
+	</select>
+	<update id="update1" parameterType="boardDto">
+		UPDATE board
+		SET board_title=#{board_title},board_content=#{board_content}
+		WHERE board_num=#{board_num}
+	</update>
+	<update id="update2" parameterType="boardDto">
+		UPDATE board
+		SET board_title=#{board_title},board_content=#{board_content},file_saveName=#{file_saveName}
+		WHERE board_num=#{board_num}
+	</update>
+	<!-- 게시글 목록 -->
+	<select  id="getList" resultType="boardDto">
+		SELECT *
+		FROM (SELECT ROWNUM as rn, A.* FROM( 
+				select board_num,board_title,board_writer,board_content,board_time
+				from board
+				where board_typeCode=#{board_typeCode}
+		<include refid="search"></include>
+		ORDER BY board_time desc
+					) A
+				)WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<!-- 게시글 수 -->
+	<select id="count" resultType="int">
+		SELECT count(*) as count 
+		FROM board
+		WHERE board_typeCode=#{board_typeCode}
+		<include refid="search"></include>
+	</select>
+	
+	
+	<sql id="search">
+		<choose>
+			<when test="keyword!=null">
+				<choose>
+				
+					<when test="searchOption=='all'">
+						AND (board_writer like '%'||#{keyword}||'%'
+								OR board_title like '%'||#{keyword}||'%'
+								 OR board_content like '%'||#{keyword}||'%' )
+						<if test="board_time!=null">
+							AND (board_time between to_date( #{date1},'YYYYMMDD') and to_date( #{date2},'YYYYMMDD')+'1')
+						</if>
+					</when>
+					<!-- 전체 검색이 아닐 경우 -->
+			
+					<when test="searchOption=='board_writer'">
+						AND (board_writer like '%'||#{keyword}||'%')
+						<if test="board_time!=null">
+							AND (board_time between to_date( #{date1},'YYYYMMDD') and to_date( #{date2},'YYYYMMDD')+'1')
+						</if>
+					</when>
+					<when test="searchOption=='board_title'">
+						AND (board_title like '%'||#{keyword}||'%')
+						<if test="board_time!=null">
+							AND (board_time between to_date( #{date1},'YYYYMMDD') and to_date( #{date2},'YYYYMMDD')+'1')
+						</if>
+					</when>
+					<when test="searchOption=='board_content'">
+						AND (board_content like '%'||#{keyword}||'%')
+						<if test="board_time!=null">
+							AND (board_time between to_date( #{date1},'YYYYMMDD') and to_date( #{date2},'YYYYMMDD')+'1')
+						</if>
+					</when>
+				</choose>
+			</when>
+			<otherwise>
+				<if test="board_time!=null">
+					AND (board_time between to_date( #{date1},'YYYYMMDD') and to_date( #{date2},'YYYYMMDD')+'1')
+				</if>
+			</otherwise>
+		</choose>
+		
+	</sql>
 </mapper>
