@@ -77,8 +77,21 @@ public class BoardController {
 	@RequestMapping("/board/private/download")
 	public ModelAndView download(ModelAndView mView,HttpServletRequest request,HttpServletResponse response,@RequestParam int file_num) {
 		service.fileDownload(request, response, file_num);
-		mView.setViewName("/board/detail.tiles");
+		mView.setViewName("board/detail.tiles");
 		return mView;
 	}
 	
+	@RequestMapping("/board/private/reply_form")
+	public ModelAndView reply_form(ModelAndView mView, HttpServletRequest request) {
+		service.getBoardNum(request);
+		mView.setViewName("board/private/reply_form.tiles");
+		return mView;
+	}
+	
+	@RequestMapping("/board/private/reply")
+	public ModelAndView reply(ModelAndView mView,HttpServletRequest request) {
+		
+		mView.setViewName("board/private/reply.tiles");
+		return mView;
+	}
 }

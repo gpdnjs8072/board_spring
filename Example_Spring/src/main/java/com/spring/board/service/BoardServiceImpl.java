@@ -466,6 +466,17 @@ public class BoardServiceImpl implements BoardService{
 		String typeName=session.selectOne("code.selectCodeName",board_typeCode);
 		request.setAttribute("typeName", typeName);
 	}
+
+	@Override
+	public void getBoardNum(HttpServletRequest request) {
+		int board_num=Integer.parseInt(request.getParameter("board_num"));
+		request.setAttribute("board_num", board_num);
+	}
+
+	@Override
+	public void reply(HttpServletRequest request, MultipartFile file1) {
+		
+	}
 	
 	
 }

@@ -23,4 +23,8 @@ public interface BoardService {
 	public void fileDownload(HttpServletRequest request,HttpServletResponse response,int file_num);
 	//게시글 목록
 	public void list(HttpServletRequest request);
+	//답변 등록 폼
+	public void getBoardNum(HttpServletRequest request);
+	//답변 등록
+	public void reply(HttpServletRequest request,MultipartFile file1);
 }
