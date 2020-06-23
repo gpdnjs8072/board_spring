@@ -12,6 +12,8 @@ public interface MemberService {
 	public void addMember(MemberDto dto,HttpServletRequest request);
 	//아이디 중복체크
 	public Map<String,Object> isExistId(String mem_id);
+	//이메일 중복체크
+	public Map<String,Object> isExistEmail(String mem_email);
 	//회원 아이디,비밀번호 확인 (로그인)
 	public void validMember(MemberDto dto,HttpServletRequest request);
 	//아이디 찾기

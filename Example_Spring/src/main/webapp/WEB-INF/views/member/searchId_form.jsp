@@ -13,12 +13,7 @@
 <div class="container">
 	<h2 >아이디 찾기</h2>
 	<br /><br />
-	<c:if test="${not empty sessionScope.mem_id }">
-		<script>
-			alert("잘못된 접근입니다.");
-			location.href="../index.jsp";
-		</script>
-	</c:if>
+	
 
 	 <form action="searchId.do" method="post">
 	 	<table >

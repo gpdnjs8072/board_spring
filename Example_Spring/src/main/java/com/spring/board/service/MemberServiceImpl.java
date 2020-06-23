@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +20,8 @@ import com.spring.board.dto.MemberDto;
 @Service
 @Repository
 public class MemberServiceImpl implements MemberService{
+	private static final Logger logger = LoggerFactory.getLogger(MemAdminServiceImpl.class);
+	
 	@Autowired
 	SqlSession session;
 	
@@ -29,6 +33,7 @@ public class MemberServiceImpl implements MemberService{
 		dto.setMem_pwd(encodePwd);
 		session.insert("member.insert",dto);
 		request.setAttribute("mem_id", dto.getMem_id());
+		logger.info("회원가입 -아이디 : "+dto.getMem_id());
 	}
 	
 	//아이디 중복확인
@@ -40,24 +45,34 @@ public class MemberServiceImpl implements MemberService{
 		return map;
 	}
 	
+	//이메일 중복확인
+	@Override
+	public Map<String, Object> isExistEmail(String mem_email) {
+		String isExistEmail=session.selectOne("member.isExistEmail",mem_email);
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("isExistEmail", isExistEmail);
+		return map;
+	}
+	
 	//회원 아이디,비밀번호 확인 (로그인)
 	@Override
 	public void validMember(MemberDto dto, HttpServletRequest request) {
+		
+		
 		//아이디,비밀번호가 유효한지 여부
 		boolean isValid=false;
 		//아이디를 이용해서 저장된 비밀번호를 읽어온다.
 		String pwdHash=session.selectOne("member.selectPwdHash",dto.getMem_id());  //아이디 존재o,암호화된 비번
-		System.out.println("pwdHash : "+pwdHash);
+	
 		MemberDto dto2; //해당아이디의 상태코드,권한 코드
 		
 		boolean isEqualPwd=false;
 		if(pwdHash!=null) {  //아이디 존재 O
 			isEqualPwd=BCrypt.checkpw(dto.getMem_pwd(), pwdHash);
-			System.out.println(isEqualPwd);
+		
 			if(isEqualPwd) {  //비밀번호 일치 o
 				dto2=session.selectOne("member.selectMember",dto.getMem_id());
-				System.out.println(dto2.getMem_loginFailCount());
-				System.out.println(dto2.getMem_stateCode().equals("101"));
+				
 				if(dto2.getMem_loginFailCount()<5 && dto2.getMem_stateCode().equals("101")) {
 					//로그인 실패횟수 0으로 변경
 					session.update("member.updateOriCount",dto.getMem_id());
@@ -65,7 +80,7 @@ public class MemberServiceImpl implements MemberService{
 					request.getSession().setAttribute("mem_id", dto.getMem_id());
 					//세션에 권한코드 저장
 					request.getSession().setAttribute("mem_authCode", dto2.getMem_authCode());
-//					logger.info("로그인 : "+dto.getMem_id());
+					logger.info("로그인 : "+dto.getMem_id());
 				}else if(dto2.getMem_stateCode().equals("102")) { //상태코드 '정지'
 					request.setAttribute("error3", "stop"); 
 				}else if(dto2.getMem_stateCode().equals("103")) { //상태코드 '탈퇴'
@@ -143,7 +158,7 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public void updateMember(MemberDto dto, HttpServletRequest request) {
 		session.update("member.updateMember",dto);
-		
+		logger.info("회원 정보 변경 : 아이디-"+dto.getMem_id());
 	}
 
 	//회원 탈퇴
@@ -152,6 +167,7 @@ public class MemberServiceImpl implements MemberService{
 		String mem_id=request.getSession().getAttribute("mem_id").toString();
 		session.update("member.deleteMember",mem_id);
 		request.getSession().invalidate();
+		logger.info("회원 탈퇴 : 아이디-"+mem_id);
 	}
 	
 }

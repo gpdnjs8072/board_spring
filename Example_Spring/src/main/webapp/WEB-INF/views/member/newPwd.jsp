@@ -11,12 +11,7 @@
 <body>
 
 
-<c:if test="${not empty sessionScope.mem_id }">
-	<script>
-		alert("잘못된 접근입니다.");
-		location.href="../index.do";
-	</script>
-</c:if>
+
 	
 <c:choose>
 	<c:when test="${isChange eq true }">

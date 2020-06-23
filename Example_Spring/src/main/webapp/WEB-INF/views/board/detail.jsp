@@ -44,10 +44,12 @@
 	<br/>
 	
 	
-	<a href="list.do?board_typeCode=${dto.board_typeCode }">목록 보기</a>
+	<a href="list.do?board_typeCode=${dto.board_typeCode }
+		&curPage=${map.curPage }&searchOption=${map.searchOption}&keyword=${map.keyword}&board_time=${map.board_time}">목록 보기</a>
 
 		<c:if test="${dto.board_writer eq mem_id }">
-			<a href="private/update_form.do?board_num=${dto.board_num }&board_typeCode=${board_typeCode}">
+			<a href="private/update_form.do?board_num=${dto.board_num }&board_typeCode=${board_typeCode}
+				&curPage=${map.curPage }&searchOption=${map.searchOption}&keyword=${map.keyword}&board_time=${map.board_time}">
 			수정
 			</a>
 		</c:if>
@@ -62,7 +64,8 @@
 	function deleteConfirm(){
 		var isDelete=confirm("글을 삭제하시겠습니까?");
 		if(isDelete){
-			location.href="private/delete.do?board_num=${dto.board_num}&board_typeCode=${board_typeCode}";
+			location.href="private/delete.do?board_num=${dto.board_num}&board_typeCode=${board_typeCode}"+
+				"&curPage=${map.curPage }&searchOption=${map.searchOption}&keyword=${map.keyword}&board_time=${map.board_time}";
 		}
 	}
 </script>

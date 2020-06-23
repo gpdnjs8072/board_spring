@@ -11,7 +11,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +20,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.spring.board.dto.BoardDto;
 import com.spring.board.dto.FileDto;
@@ -40,7 +39,7 @@ import com.spring.board.dto.PagingDto;
 @Service
 @Repository
 public class BoardServiceImpl implements BoardService{
-//	static Logger logger=Logger.getLogger(BoardInsertController.class);
+	private static final Logger logger = LoggerFactory.getLogger(BoardServiceImpl.class);
 	
 	@Autowired
 	SqlSession session;
@@ -119,11 +118,25 @@ public class BoardServiceImpl implements BoardService{
 		
 		
 		request.setAttribute("board_typeCode", board_typeCode);
-		
+		logger.info("게시글 등록 : 종류-"+board_typeCode);
 	}
 
 	@Override
 	public void detailBoard(HttpServletRequest request, int board_num) {
+		//검색조건 유지시키기 위해
+		String searchOption=request.getParameter("searchOption");
+		String keyword=request.getParameter("keyword");
+		int curPage=Integer.parseInt(request.getParameter("curPage"));
+		String board_time=request.getParameter("board_time");
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("searchOption", searchOption); // 검색옵션
+		map.put("keyword", keyword); // 검색키워드
+		map.put("curPage", curPage);
+		map.put("board_time", board_time);
+		request.setAttribute("map", map);
+		
+		
 		String board_typeCode=request.getParameter("board_typeCode");
 
 		BoardDto dto=session.selectOne("board.detail",board_num);
@@ -140,6 +153,19 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public void updateForm(HttpServletRequest request, int board_num) {
 //		String board_typeCode=request.getParameter("board_typeCode");
+		//검색조건 유지시키기 위해
+		String searchOption=request.getParameter("searchOption");
+		String keyword=request.getParameter("keyword");
+		int curPage=Integer.parseInt(request.getParameter("curPage"));
+		String board_time=request.getParameter("board_time");
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("searchOption", searchOption); // 검색옵션
+		map.put("keyword", keyword); // 검색키워드
+		map.put("curPage", curPage);
+		map.put("board_time", board_time);
+		request.setAttribute("map", map);
+		
 		BoardDto dto=session.selectOne("board.detail",board_num);
 	
 		FileDto fileDto=session.selectOne("file.getFile",board_num);
@@ -152,6 +178,19 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public void updateBoard(HttpServletRequest request,MultipartFile file1) {
+		//검색조건 유지시키기 위해
+		String searchOption=request.getParameter("searchOption");
+		String keyword=request.getParameter("keyword");
+		int curPage=Integer.parseInt(request.getParameter("curPage"));
+		String board_time=request.getParameter("board_time");
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("searchOption", searchOption); // 검색옵션
+		map.put("keyword", keyword); // 검색키워드
+		map.put("curPage", curPage);
+		map.put("board_time", board_time);
+		request.setAttribute("map", map);
+		
 		int board_num=Integer.parseInt(request.getParameter("board_num"));
 		
 		
@@ -171,7 +210,9 @@ public class BoardServiceImpl implements BoardService{
         boardDto.setBoard_content(board_content);
 		
         FileDto fileDto=new FileDto();
-		
+        BoardDto boardDto2=session.selectOne("board.detail",board_num);
+		String fileExist=boardDto2.getFile_saveName();
+        
 		//파일 저장 경로
 		String path=request.getServletContext().getRealPath("/upload");
 	
@@ -198,49 +239,79 @@ public class BoardServiceImpl implements BoardService{
         	fileDto.setFile_saveName(file_saveName);
         	fileDto.setFile_size(file_size);
         	fileDto.setFile_writer(board_writer);
-        	int file_num=0;
-        	file_num=session.selectOne("file.isExist", board_num);
-        	if(file_num>0) {  //기존글에 파일이 존재했다면
-        		session.update("file.update",fileDto);	
-        	}else if(file_num==0) {  //존재하지 않았다면 
-        		session.insert("file.insert",fileDto);
+        	
+        	
+        	
+    		if(fileExist!=null) { //기존글에 첨부파일이 존재했다면
+    			session.update("file.update",fileDto);	
+    		
+        	}else {  //존재하지 않았다면 
+        		session.insert("file.insertFile",fileDto);
+        		
         	}
         	
 			try {
 				//파일 저장
 				file1.transferTo(new File(filePath+file_saveName));
 			}catch (Exception e) {
-				e.printStackTrace();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				PrintStream printStream = new PrintStream(out);
+		
+				e.printStackTrace(printStream);
+				String stackTraceString=out.toString();
+			    logger.error("error : "+stackTraceString);
 			}
 		}else {  //파일 존재 x
 			session.update("board.update1",boardDto);
+		
 		}
 		
 		request.setAttribute("board_num", board_num);
 		request.setAttribute("board_typeCode", board_typeCode);
-		
+		logger.info("게시글 수정 : 글 번호-"+board_num);
 	}
 
 	@Override
 	public void deleteBoard(HttpServletRequest request, int board_num) {
+		//검색조건 유지시키기 위해
+		String searchOption=request.getParameter("searchOption");
+		String keyword=request.getParameter("keyword");
+		int curPage=Integer.parseInt(request.getParameter("curPage"));
+		String board_time=request.getParameter("board_time");
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("searchOption", searchOption); // 검색옵션
+		map.put("keyword", keyword); // 검색키워드
+		map.put("curPage", curPage);
+		map.put("board_time", board_time);
+		request.setAttribute("map", map);
+		
 		String board_typeCode=request.getParameter("board_typeCode");
-		FileDto dto=session.selectOne("file.getData",board_num);
+
 //		String mem_id=request.getSession().getAttribute("mem_id").toString();
 //		String mem_authCode=request.getSession().getAttribute("mem_authCode").toString();
 //		if(mem_id.equals(dto.getFile_writer())||mem_authCode.equals("002")) {
 //			
 //		}
-		String file_saveName=dto.getFile_saveName();
 		
-		//file 삭제
-		session.delete("file.delete",board_num);
-		//폴더에서 해당 파일 삭제
-		String path=request.getServletContext().getRealPath("/upload")+File.separator+file_saveName;
-		File file=new File(path);
-		file.delete();
+		BoardDto boardDto=session.selectOne("board.detail",board_num);
+		String fileExist=boardDto.getFile_saveName();  //해당 게시글의 파일 이름 가져오기
+		
+		if(fileExist!=null) { //해당 게시글에 첨부파일이 존재하면
+			FileDto fileDto=session.selectOne("file.getFile",board_num);
+			String file_saveName=fileDto.getFile_saveName();
+			//file 삭제
+			session.delete("file.delete",board_num);
+			//폴더에서 해당 파일 삭제
+			String path=request.getServletContext().getRealPath("/upload")+File.separator+file_saveName;
+			File file=new File(path);
+			file.delete();
+		}
+		
 		//게시글 삭제
 		session.delete("board.delete",board_num);
 		request.setAttribute("board_typeCode", board_typeCode);
+		logger.info("게시글 삭제 : 글 번호-"+board_num);
 		
 	}
 
@@ -287,12 +358,12 @@ public class BoardServiceImpl implements BoardService{
 		    response.setContentLength((int) file.length());                // 파일 사이즈 설정
 		    response.setHeader("Pargma", "no-cache");
 		    response.setHeader("Expires", "-1");
-		 
+		    
 		    byte[] data = new byte[2048];
 		    FileInputStream fis = new FileInputStream(file);
 		    BufferedInputStream bis = new BufferedInputStream(fis);
 		    BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
-		 
+		    
 		    int count = 0;
 		    while ((count = bis.read(data)) != -1) {
 		        bos.write(data,0,count);
@@ -307,16 +378,13 @@ public class BoardServiceImpl implements BoardService{
 		    
 		    
 		} catch (Exception e) {
-//			ByteArrayOutputStream out = new ByteArrayOutputStream();
-//			PrintStream printStream = new PrintStream(out);
-//	
-//			e.printStackTrace(printStream);
-//			String stackTraceString=out.toString();
-//		    logger.error("error : "+stackTraceString);
-			e.printStackTrace();
-		} finally{
-		    
-		}
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			PrintStream printStream = new PrintStream(out);
+	
+			e.printStackTrace(printStream);
+			String stackTraceString=out.toString();
+		    logger.error("error : "+stackTraceString);
+		} 
 	}
 
 	@Override
@@ -354,6 +422,7 @@ public class BoardServiceImpl implements BoardService{
 			date1=df.format(cal.getTime());
 		}
 				
+		
 		int curPage=1;
 		
 		if(request.getParameter("curPage")!=null) {
@@ -369,7 +438,7 @@ public class BoardServiceImpl implements BoardService{
 		map.put("board_time", board_time);
 		
 		int count=session.selectOne("board.count",map);
-		System.out.println("count : "+count);
+	
 		
 		//PagingDto(게시글 갯수,현재페이지,페이지당 게시글 수,화면의 페이지수)
 		PagingDto pagingDto=new PagingDto(count, curPage,3, 5);
@@ -380,7 +449,7 @@ public class BoardServiceImpl implements BoardService{
 		map.put("end", end);
 	
 		List<BoardDto> list=session.selectList("board.getList",map);
-		System.out.println(list.size());
+		
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		map2.put("list", list); // list
 		map2.put("count", count); // 레코드의 갯수
@@ -389,6 +458,7 @@ public class BoardServiceImpl implements BoardService{
 		map2.put("keyword", keyword); // 검색키워드
 		map2.put("pagingDto", pagingDto);
 		map2.put("board_time",board_time); //검색조건 -시간
+		map2.put("curPage", curPage);
 		request.setAttribute("map2", map2);
 		
 		request.setAttribute("board_typeCode", board_typeCode);

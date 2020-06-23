@@ -11,12 +11,7 @@
 <body>
 
 	<c:choose>
-		<c:when test="${not empty sessionScope.mem_id }">
-			<script>
-				alert("잘못된 접근입니다.");
-				location.href="../index.do";
-			</script>
-		</c:when>
+		
 		<c:when test="${notExist eq 'notExist'}">
 			<script>
 				alert("사용자 인증에 실패했습니다.")

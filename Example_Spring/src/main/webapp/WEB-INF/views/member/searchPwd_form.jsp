@@ -14,12 +14,6 @@
 	<h2>비밀번호 찾기</h2>
 	<br /><br />
 	
-	<c:if test="${not empty sessionScope.mem_id }">
-		<script>
-			alert("잘못된 접근입니다.");
-			location.href="../index.do";
-		</script>
-	</c:if>
 	
 	<form action="newPwd_form.do" method="post">
 		

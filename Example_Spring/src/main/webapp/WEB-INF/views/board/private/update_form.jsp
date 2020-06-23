@@ -10,6 +10,10 @@
 <div class="container">
 	<h2>글 수정</h2>
    <form action="update.do" method="post" enctype="multipart/form-data">
+   	  <input type="hidden" name="searchOption" value="${map.searchOption }" />
+   	  <input type="hidden" name="keyword" value="${map.keyword }" />
+   	  <input type="hidden" name="curPage" value="${map.curPage }" />
+   	  <input type="hidden" name="board_time" value="${map.board_time }" />
       <input type="hidden" name="board_num" value="${dto.board_num }" />
       <input type="hidden" name="saveFile" value="${fileDto.file_oriName }" />
       <input type="hidden" name="board_typeCode" value="${dto.board_typeCode }" />

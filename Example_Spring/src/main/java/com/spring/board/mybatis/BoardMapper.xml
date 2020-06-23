@@ -18,7 +18,7 @@
 		WHERE file_saveName=#{file_saveName}
 	</select>
 	<select  id="detail" parameterType="int" resultType="boardDto">
-		SELECT board_num,board_title,board_writer,board_content,board_typeCode,board_viewCount,board_time,file_saveName
+		SELECT board_num,board_title,board_writer,board_content,board_typeCode,board_time,file_saveName
 		FROM board
 		WHERE board_num=#{board_num}
 	</select>
@@ -32,6 +32,11 @@
 		SET board_title=#{board_title},board_content=#{board_content},file_saveName=#{file_saveName}
 		WHERE board_num=#{board_num}
 	</update>
+	<delete id="delete" parameterType="int">
+		DELETE FROM board
+		WHERE board_num=#{board_num}
+	</delete>
+	
 	<!-- 게시글 목록 -->
 	<select  id="getList" resultType="boardDto">
 		SELECT *

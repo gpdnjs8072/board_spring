@@ -11,12 +11,7 @@
 <div class="container">
 <h2 >새로운 비밀번호 입력</h2>
 	<br /><br />
-	<c:if test="${not empty sessionScope.mem_id }">
-		<script>
-			alert("잘못된 접근입니다.");
-			location.href="../index.jsp";
-		</script>
-	</c:if>
+	
 
 	<form action="newPwd.do" method="post">
 		<input type="hidden" name="mem_id" id="mem_id" value="${mem_id }"/>

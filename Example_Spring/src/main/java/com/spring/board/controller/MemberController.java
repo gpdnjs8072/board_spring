@@ -1,10 +1,13 @@
 package com.spring.board.controller;
 
+import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +22,8 @@ import com.spring.board.service.MemberService;
 
 @Controller
 public class MemberController {
+	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
+	
 	@Autowired
 	MemberService service;
 	
@@ -29,11 +34,19 @@ public class MemberController {
 		return new ModelAndView("member/signup_form.tiles");
 	}
 	
-	//아이디 중복확인
+	 //아이디 중복확인
 	 @ResponseBody
-	 @RequestMapping(value="/member/existId",method=RequestMethod.POST) 
+	 @RequestMapping(value="/member/existId",method=RequestMethod.GET) 
 	 public Map<String, Object> existId(HttpServletRequest request,@RequestParam String mem_id){
 		 Map<String, Object> map=service.isExistId(mem_id);
+		 return  map;
+	}
+	 
+	 //이메일 중복확인
+	 @ResponseBody
+	 @RequestMapping(value="/member/existEmail",method=RequestMethod.GET) 
+	 public Map<String, Object> existEmail(HttpServletRequest request,@RequestParam String mem_email){
+		 Map<String, Object> map=service.isExistEmail(mem_email);
 		 return  map;
 	}
 	
@@ -49,14 +62,28 @@ public class MemberController {
 	
 	//로그인 폼
 	@RequestMapping("/member/login_form")
-	public ModelAndView login_form() {
+	public ModelAndView login_form(HttpServletRequest request) {
+		//url
+		String url=request.getParameter("url");
+		request.setAttribute("url", url);
+		
 		return new ModelAndView("member/login_form.tiles");
 	}
 	
 	//로그인
 	@RequestMapping("/member/login")
 	public ModelAndView login(ModelAndView mView,@ModelAttribute("dto") MemberDto dto,HttpServletRequest request) {
-		
+		//url
+		String url=request.getParameter("url");
+		if(url==""||url==null){//url이 없으면
+			request.setAttribute("url", "no");
+		}else {
+			
+			String encodedUrl=URLEncoder.encode(url);
+			request.setAttribute("encodedUrl", encodedUrl);
+			request.setAttribute("url", url);
+		}
+	
 		service.validMember(dto, request);
 		mView.setViewName("member/login");
 		return mView;

@@ -9,7 +9,8 @@
 <body>
 	<script>
 		alert("글이 수정되었습니다.")
-		location.href="../detail.do?board_typeCode=${board_typeCode }&board_num=${board_num}";
+		location.href="../detail.do?board_typeCode=${board_typeCode }&board_num=${board_num}"+
+		"&curPage=${map.curPage }&searchOption=${map.searchOption}&keyword=${map.keyword}&board_time=${map.board_time}";
 	</script>
 </body>
 </html>

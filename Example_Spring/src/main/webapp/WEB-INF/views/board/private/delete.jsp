@@ -8,19 +8,13 @@
 <title>Insert title here</title>
 </head>
 <body>
-<c:choose>
-	<c:when test="${success eq true }">
+
 		<script>
 			alert("글이 삭제되었습니다.");
-			location.href="../list.do?board_typeCode=${board_typeCode}";
+			location.href="../list.do?board_typeCode=${board_typeCode}"+
+			"&curPage=${map.curPage }&searchOption=${map.searchOption}&keyword=${map.keyword}&board_time=${map.board_time}";
 		</script>
-	</c:when>
-	<c:otherwise>
-		<script>
-			alert("글 삭제에 실패했습니다.");
-			location.href="../list.do?board_typeCode=${board_typeCode}";
-		</script>
-	</c:otherwise>
-</c:choose>
+	
+	
 </body>
 </html>

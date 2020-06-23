@@ -83,6 +83,58 @@
 		<beans:property name="maxUploadSize" value="10240000"/>
 	</beans:bean>
 	
+	<!-- 언어설정 -->
+	<interceptors>
+	    <beans:bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+	    	<beans:property name="paramName" value="lang" />
+	    </beans:bean>
+    </interceptors>	 
+    
+    
+    <!-- 인터셉터 bean 설정 -->
+	<!-- 사용자 세션체크 bean -->
+	<beans:bean id="loginInterceptor" class="com.spring.board.interceptor.LoginInterceptor"/>
+	<!-- 회원 관리자 세션체크 bean -->
+	<beans:bean id="MemberAdminInterceptor" class="com.spring.board.interceptor.MemberAdminInterceptor"/>
+	<!-- 게시판 세션체크 bean -->
+	<beans:bean id="BoardAdminInterceptor" class="com.spring.board.interceptor.BoardAdminInterceptor"/>
+	<!-- 이미 로그인 한 상태 -->
+	<beans:bean id="AlreadyLoginInterceptor" class="com.spring.board.interceptor.AlreadyLoginInterceptor"/>
 	
+	<!-- logger 공통 -->
+	<beans:bean id="LoggerInterceptor" class="com.spring.board.interceptor.LoggerInterceptor"/>
+	<!-- 인터셉터 매핑정보 -->
+	<interceptors>
+	
+		<!-- 사용자 세션체크 매핑 -->
+		<interceptor>
+			<mapping path="/member/private/*"/>
+			<mapping path="/board/private/*"/>
+			<mapping path="/memberAdmin/*"/>			
+			<beans:ref bean="loginInterceptor"/>
+		</interceptor> 
+		<!-- 회원 관리자 세션체크 매핑 --> 
+		<interceptor>
+			<mapping path="/memberAdmin/*"/>			
+			<beans:ref bean="MemberAdminInterceptor"/>
+		</interceptor> 
+		<!-- 게시판 세션체크 매핑 --> 
+		<interceptor>
+			<mapping path="/board/private/insert_form.do?board_type=201"/>			
+			<mapping path="/board/private/insert.do?board_type=201"/>			
+			<beans:ref bean="BoardAdminInterceptor"/>
+		</interceptor>
+		<!-- 이미 로그인 한 상태 매핑 -->
+		<interceptor>
+			<mapping path="/member/*"/>
+			<exclude-mapping path="/member/private/*"/>			
+			<beans:ref bean="AlreadyLoginInterceptor"/>
+		</interceptor>
+		<!-- logger 매핑 -->
+		<interceptor>
+			<mapping path="/*"/>			
+			<beans:ref bean="LoggerInterceptor"/>
+		</interceptor> 
+	</interceptors>
 	
 </beans:beans>

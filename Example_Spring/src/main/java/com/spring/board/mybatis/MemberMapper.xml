@@ -13,6 +13,12 @@
 		 FROM member
 		WHERE mem_id=#{mem_id}
 	</select>
+	<!-- 이메일 중복체크 -->
+	<select id="isExistEmail" parameterType="String" resultType="String">
+		SELECT mem_email
+		FROM member
+		WHERE mem_email=#{mem_email}
+	</select>
 	<!-- 로그인 -->
 	<select  id="isValid" parameterType="memberDto" resultType="memberDto">
 		SELECT mem_id,mem_stateCode,mem_authCode,mem_loginFailCount 
@@ -118,9 +124,9 @@
 			<when test="keyword!=null">
 				<choose>
 					<when test="searchOption == 'all'">
-						WHERE mem_id like '%'||#{keyword}||'%'
+						WHERE (mem_id like '%'||#{keyword}||'%'
 						OR mem_email like '%'||#{keyword}||'%'
-						OR mem_name like '%'||#{keyword}||'%'
+						OR mem_name like '%'||#{keyword}||'%')
 						<if test="mem_authCode!=null">
 							AND (mem_authCode=#{mem_authCode})
 						</if>
@@ -128,19 +134,19 @@
 					<!-- 전체 검색이 아닐 경우 -->
 			
 					<when test="searchOption == 'mem_id'">
-						WHERE mem_id like '%'||#{keyword}||'%'
+						WHERE (mem_id like '%'||#{keyword}||'%')
 						<if test="mem_authCode!=null">
 							AND (mem_authCode=#{mem_authCode})
 						</if>
 					</when>
 					<when test="searchOption == 'mem_email'">
-						WHERE mem_email like '%'||#{keyword}||'%'
+						WHERE (mem_email like '%'||#{keyword}||'%')
 						<if test="mem_authCode!=null">
 							AND (mem_authCode=#{mem_authCode})
 						</if>
 					</when>
 					<when test="searchOption == 'mem_name'">
-						WHERE mem_name like '%'||#{keyword}||'%'
+						WHERE (mem_name like '%'||#{keyword}||'%')
 						<if test="mem_authCode!=null">
 							AND (mem_authCode=#{mem_authCode})
 						</if>
@@ -161,39 +167,44 @@
 	
 	<sql id="search">
 		<choose>
-			<when test="searchOption=='all'">
-				WHERE r.mem_id like '%'||#{keyword}||'%'
-				OR r.mem_email like '%'||#{keyword}||'%'
-				OR r.mem_name like '%'||#{keyword}||'%'
-				<if test="mem_authCode!=null">
-					AND (r.mem_authCode=#{mem_authCode})
-				</if>
+			<when test="keyword!=null">
+				<choose>
+					<when test="searchOption=='all'">
+						WHERE (r.mem_id like '%'||#{keyword}||'%'
+						OR r.mem_email like '%'||#{keyword}||'%'
+						OR r.mem_name like '%'||#{keyword}||'%' )
+						<if test="mem_authCode!=null">
+							AND (r.mem_authCode=#{mem_authCode})
+						</if>
+					</when>
+					<!-- 전체 검색이 아닐 경우 -->
+			
+					<when test="searchOption=='mem_id'">
+						WHERE (r.mem_id like '%'||#{keyword}||'%')
+						<if test="mem_authCode!=null">
+							AND (r.mem_authCode=#{mem_authCode})
+						</if>
+					</when>
+					<when test="searchOption=='mem_email'">
+						WHERE (r.mem_email like '%'||#{keyword}||'%')
+						<if test="mem_authCode!=null">
+							AND (r.mem_authCode=#{mem_authCode})
+						</if>
+					</when>
+					<when test="searchOption=='mem_name'">
+						WHERE ( r.mem_name like '%'||#{keyword}||'%')
+						<if test="mem_authCode!=null">
+							AND (r.mem_authCode=#{mem_authCode})
+						</if>
+					</when>
+				</choose>
 			</when>
-			<!-- 전체 검색이 아닐 경우 -->
-	
-			<when test="searchOption=='mem_id'">
-				WHERE r.mem_id like '%'||#{keyword}||'%'
-				<if test="mem_authCode!=null">
-					AND (r.mem_authCode=#{mem_authCode})
-				</if>
-			</when>
-			<when test="searchOption=='mem_email'">
-				WHERE r.mem_email like '%'||#{keyword}||'%'
-				<if test="mem_authCode!=null">
-					AND (r.mem_authCode=#{mem_authCode})
-				</if>
-			</when>
-			<when test="searchOption=='mem_name'">
-				WHERE r.mem_name like '%'||#{keyword}||'%'
-				<if test="mem_authCode!=null">
-					AND (r.mem_authCode=#{mem_authCode})
-				</if>
-			</when>
-			<otherwise>
+			<when test="keyword==null">
 				<if test="mem_authCode!=null">
 					WHERE r.mem_authCode=#{mem_authCode}
 				</if>
-			</otherwise>
+			</when>
+			
 		</choose>
 		
 	</sql>

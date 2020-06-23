@@ -12,6 +12,10 @@
 
 <h2>회원 상태/권한 변경</h2>
 <form action="updateCode.do" method="post">
+	<input type="hidden" name="searchOption" id="searchOption" value="${map.searchOption}"/>
+	<input type="hidden" name="mem_authCode2" id="mem_authCode2" value="${map.mem_authCode}"/>
+	<input type="hidden" name="keyword" id="keyword" value="${map.keyword}"/>
+	<input type="hidden" name="curPage" id="curPage" value="${map.curPage}"/>
 	<p>아이디 : ${dto.mem_id} </p>
 	<input type="hidden" name="mem_id" id="mem_id" value="${dto.mem_id }" />
 	<div class="container">

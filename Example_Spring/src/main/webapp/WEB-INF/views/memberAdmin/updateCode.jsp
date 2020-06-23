@@ -10,20 +10,13 @@
 </head>
 <body>
 
-	<c:choose>
-	<c:when test="${isUpdate eq true }">
-		<script>
-			alert("변경되었습니다.");
-			location.href="memberList.do";
-		</script>
-	
-	</c:when>
-	<c:otherwise>
-		<script>
-			alert("변경 실패했습니다.");
-			location.href="memberList.do";
-		</script>
-	</c:otherwise>
-</c:choose>
+	<script>
+		alert("회원 상태/권한이 변경되었습니다.");
+		location.href=
+			"memberList.do?curPage=${map.curPage}&searchOption=${map.searchOption}"+
+				"&keyword=${map.keyword}&mem_authCode=${map.mem_authCode}";
+	</script>
+
+
 </body>
 </html>

@@ -1,14 +1,11 @@
 package com.spring.board.controller;
 
-
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,22 +17,17 @@ public class MemAdminController {
 	@Autowired
 	MemAdminService service;
 	
-	@RequestMapping(value="/memberAdmin/memberList",method= {RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView memberList(ModelAndView mView, HttpServletRequest request,
-									@RequestParam(defaultValue="mem_id") String searchOption,
-									@RequestParam(defaultValue="001") String mem_authCode,
-									@RequestParam(defaultValue="") String keyword,
-									@RequestParam(defaultValue="1") int curPage
-									) throws Exception{
-		service.getList(request, searchOption, keyword, mem_authCode, curPage);
-		mView.setViewName("memberAdmin/list.tiles");
+	@RequestMapping(value="/memberAdmin/memberList")
+	public ModelAndView memberList(ModelAndView mView, HttpServletRequest request) throws Exception{
+		service.getList(request);
+		mView.setViewName("memberAdmin/memberList.tiles");
 		return mView;
 	}
 	
-	@RequestMapping("/memberAdmin/updateCode_form")
+	@RequestMapping(value="/memberAdmin/updateCode_form")
 	public ModelAndView updateCode_form (ModelAndView mView,@RequestParam String mem_id,HttpServletRequest request) {
 		service.memberCode(request, mem_id);
-		mView.setViewName("member/updateCode_form.tiles");
+		mView.setViewName("memberAdmin/updateCode_form.tiles");
 		return mView;
 	}
 	

@@ -6,25 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
 </head>
 <body>
-
-
-
-
-	<c:if test="${isExist eq false}">
-		<script>
-			alert("사용자 인증에 실패했습니다.");
-			location.href="searchPwd_form.do";
-		</script>
-	
-	</c:if>
-
-	
-		
-
-
-
+<h2>DB관련 ERROR</h2>
+<p>${exception.message }</p>
+<a href="../index.do">메인페이지 이동</a>
 </body>
 </html>
