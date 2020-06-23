@@ -68,6 +68,9 @@ create table board(
 --게시판에 칼럼추가
 alter table board add(file_saveName varchar2(100) ;
 
+alter table board add(board_oriNum number);
+alter table board add(board_subNum number);
+
 --board_num 의 seq
 create sequence board_num_seq;
 

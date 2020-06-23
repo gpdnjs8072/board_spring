@@ -136,6 +136,8 @@ public class BoardServiceImpl implements BoardService{
 		map.put("board_time", board_time);
 		request.setAttribute("map", map);
 		
+		int board_subNum=session.selectOne("board.maxSubNum", board_num);
+		request.setAttribute("board_subNum", board_subNum);
 		
 		String board_typeCode=request.getParameter("board_typeCode");
 
@@ -475,7 +477,73 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public void reply(HttpServletRequest request, MultipartFile file1) {
+		int board_num=Integer.parseInt(request.getParameter("board_num"));
+		int board_subNum=session.selectOne("board.maxSubNum", board_num);
+		board_subNum=board_subNum+1;
 		
+		String file_saveName=""; //저장된 이름
+		String file_oriName=""; //원본 이름
+		long file_size=0; //파일 사이즈
+		
+		String board_writer=request.getSession().getAttribute("mem_id").toString();
+		String board_typeCode=request.getParameter("board_typeCode");
+		String board_title=request.getParameter("board_title");
+		String board_content=request.getParameter("board_content");
+		
+		
+		BoardDto boardDto=new BoardDto();
+		boardDto.setBoard_writer(board_writer);
+        boardDto.setBoard_typeCode(board_typeCode);
+        boardDto.setBoard_title(board_title);
+        boardDto.setBoard_content(board_content);
+		boardDto.setBoard_oriNum(board_num);
+		boardDto.setBoard_subNum(board_subNum);
+        
+        FileDto fileDto=new FileDto();
+		
+		//파일 저장 경로
+		String path=request.getServletContext().getRealPath("/upload");
+	
+		if(!file1.isEmpty()) {   //파일이 존재할 때
+			
+			//저장할 파일의 상세 경로
+			String filePath=path+File.separator;
+			File file=new File(filePath);
+			if(!file.exists()) {//디렉토리가 존재하지 않으면
+				file.mkdir();  //디렉토리 생성
+			}
+			file_oriName=file1.getOriginalFilename();
+			file_size=file1.getSize();
+			//저장되는 파일 이름은 현재시간+oriName
+			file_saveName=System.currentTimeMillis()+file_oriName;
+			
+			//게시글 정보를 저장
+			boardDto.setFile_saveName(file_saveName);
+			session.insert("board.insert4",boardDto);
+			
+			
+			
+			fileDto.setBoard_num(board_num);
+			fileDto.setFile_oriName(file_oriName);
+        	fileDto.setFile_saveName(file_saveName);
+        	fileDto.setFile_size(file_size);
+        	fileDto.setFile_writer(board_writer);
+        	fileDto.setBoard_num(board_num);
+        	session.insert("file.insertFile",fileDto);
+        	
+			try {
+				//파일 저장
+				file1.transferTo(new File(filePath+file_saveName));
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else {  //파일 존재 x
+			session.insert("board.insert3",boardDto);
+		}
+		
+		
+		request.setAttribute("board_typeCode", board_typeCode);
+		logger.info("게시글 등록 : 종류-"+board_typeCode);
 	}
 	
 	
