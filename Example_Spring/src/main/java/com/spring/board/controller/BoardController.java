@@ -88,7 +88,7 @@ public class BoardController {
 		return mView;
 	}
 	
-	@RequestMapping("/board/private/reply")
+	@RequestMapping(value="/board/private/reply",method=RequestMethod.POST)
 	public ModelAndView reply(ModelAndView mView,HttpServletRequest request,@RequestParam("file1") MultipartFile file1) throws IOException {
 		service.reply(request, file1);
 		mView.setViewName("board/private/reply.tiles");

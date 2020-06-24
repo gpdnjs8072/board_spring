@@ -63,17 +63,14 @@
 	</welcome-file-list>
 	
 	 <!-- 오류 페이지 이동 -->
-   <error-page>
+  <error-page>
 		<error-code>404</error-code>
-		<location>/exception/404.jsp</location>	
+		<location>/WEB-INF/views/exception/404.jsp</location>	
 	</error-page>
 	<error-page>
 		<error-code>500</error-code>
-		<location>/exception/500.jsp</location>	
-	</error-page>
-	<error-page>
-    	<exception-type>java.lang.Throwable</exception-type>
-    	<location>/exception/error.do</location>
-    </error-page>
+		<location>/WEB-INF/views/exception/500.jsp</location>	
+	</error-page> 
+	
 
 </web-app>

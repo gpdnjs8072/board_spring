@@ -10,6 +10,6 @@
 <body>
 <h2>DB관련 ERROR</h2>
 <p>${exception.message }</p>
-<a href="../index.do">메인페이지 이동</a>
+<a href="${pageContext.request.contextPath }/index.do">메인페이지 이동</a>
 </body>
 </html>

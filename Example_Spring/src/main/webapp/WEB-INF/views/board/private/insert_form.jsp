@@ -27,7 +27,7 @@
 		
 	<c:choose>
 		<c:when test="${board_typeCode eq '201'}">
-			<c:if test="${mem_authCode eq '002'  }">
+			<c:if test="${mem_authCode eq '003'  }">
 				<button type="submit" onclick="submitContents(this);" id="insertBtn">등록</button>
 			</c:if>
 		</c:when>

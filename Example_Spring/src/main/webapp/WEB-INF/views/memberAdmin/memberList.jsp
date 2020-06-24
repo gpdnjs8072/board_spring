@@ -39,7 +39,7 @@
 		<label><input type="radio" name="mem_authCode" id="mem_authCode" value="002" 
 			<c:out value="${map2.mem_authCode == '002'?'checked':''}"/>/>회원관리자</label>
 		<label><input type="radio" name="mem_authCode" id="mem_authCode" value="003" 
-			<c:out value="${map2.mem_authCode == '003'?'checked':''}"/>/>게시글관리자</label>
+			<c:out value="${map2.mem_authCode == '003'?'checked':''}"/>/>게시판관리자</label>
 		<input type="submit" value="조회">
 	
 	</form>

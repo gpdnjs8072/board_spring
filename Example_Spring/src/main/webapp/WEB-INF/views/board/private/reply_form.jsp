@@ -10,16 +10,16 @@
 </head>
 <body>
 <div class="container">
-<h2>답변</h2>
+<h2>답변등록</h2>
 
 
 <form action="reply.do" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="${board_num }" value="${board_num }" />
+		<input type="hidden" name="board_num" value="${board_num}" />
 		<label for="board_typeCode">게시글 종류</label>
 		<input type="hidden" name="board_typeCode" id="board_typeCode" value="${board_typeCode }" required="required"/>${typeName } <br />
 		
 		<label for="board_title">제목</label>
-		<input type="text" name="board_title" id="board_title" required="required" value="  [RE:]"/><br />
+		<input type="text" name="board_title" id="board_title" required="required"/><br />
 		
 		<label for="board_content">내용</label> 
 		<textarea name="board_content" id="board_content" required="required"></textarea><br />
@@ -29,7 +29,7 @@
 		
 	<c:choose>
 		<c:when test="${board_typeCode eq '201'}">
-			<c:if test="${mem_authCode eq '002'  }">
+			<c:if test="${mem_authCode eq '003'  }">
 				<button type="submit" onclick="submitContents(this);" id="insertBtn">등록</button>
 			</c:if>
 		</c:when>

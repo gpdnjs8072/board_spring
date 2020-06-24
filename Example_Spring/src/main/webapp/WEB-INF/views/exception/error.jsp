@@ -9,6 +9,6 @@
 <body>
 <h1>ERROR</h1>
 <p>에러 발생</p>
-<a href="../index.jsp">메인페이지 이동</a>
+<a href="${pageContext.request.contextPath }/index.do">메인페이지 이동</a>
 </body>
 </html>

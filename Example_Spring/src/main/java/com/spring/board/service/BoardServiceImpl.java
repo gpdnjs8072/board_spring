@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -136,7 +137,7 @@ public class BoardServiceImpl implements BoardService{
 		map.put("board_time", board_time);
 		request.setAttribute("map", map);
 		
-		int board_subNum=session.selectOne("board.maxSubNum", board_num);
+		int board_subNum=session.selectOne("board.subNum", board_num);
 		request.setAttribute("board_subNum", board_subNum);
 		
 		String board_typeCode=request.getParameter("board_typeCode");
@@ -324,6 +325,10 @@ public class BoardServiceImpl implements BoardService{
 		FileDto dto=session.selectOne("file.getData",file_num);
 		
 		String realPath=request.getServletContext().getRealPath("/upload")+File.separator;
+		
+		FileInputStream fis = null;
+	    BufferedInputStream bis = null;
+	    BufferedOutputStream bos = null;
 		try {
 			 
 		    String header = request.getHeader("User-Agent");
@@ -332,20 +337,15 @@ public class BoardServiceImpl implements BoardService{
 		    //한글 파일 받기 위해서 둘다 "UTF-8"로 설정함
 		    String path = new String(realPath.toString().getBytes("UTF-8"), "UTF-8");
 		    //실제 파일 이름
-		    String fileName = new String(dto.getFile_oriName().toString().getBytes("UTF-8"), "UTF-8");
-		    System.out.println("fileName : "+fileName);
+		    String fileName = new String(dto.getFile_oriName().toString().getBytes("UTF-8"), "ISO-8859-1");
 		    String viewFileName = "";
 		    
 		    if (header.contains("MSIE") || header.contains("Trident")) {// 익스플로러의 경우 한글처리
 		        //저장되는 파일 이름
 		    	viewFileName = URLEncoder.encode(dto.getFile_saveName().toString(),"UTF-8").replaceAll("\\+", "%20");
-		        System.out.println("한글파일1");
-		        System.out.println("viewFileName : "+viewFileName); 
 		    } else {   // 익스플로러 이외 한글처리
 		        //저장되는 파일이름
-		    	viewFileName = new String(dto.getFile_saveName().toString().getBytes("UTF-8"),"8859_1");
-		        System.out.println("한글2");
-		        System.out.println("viewFileName : "+viewFileName);
+		    	viewFileName = new String(dto.getFile_saveName().toString().getBytes("UTF-8"),"UTF-8");
 		    }
 		    
 		 
@@ -355,16 +355,16 @@ public class BoardServiceImpl implements BoardService{
 		    response.setContentType("application/octer-stream");
 		 
 		    // 해더에 내가 원하는 전송할 파일 이름을 설정
-		    response.setHeader("Content-Disposition", "attachment;filename=" + viewFileName + "");
+		    response.setHeader("Content-Disposition", "attachment;filename=" + fileName + "");
 		    response.setHeader("Content-Transper-Encoding", "binary");    // 인코딩 설정 변경
 		    response.setContentLength((int) file.length());                // 파일 사이즈 설정
 		    response.setHeader("Pargma", "no-cache");
 		    response.setHeader("Expires", "-1");
 		    
 		    byte[] data = new byte[2048];
-		    FileInputStream fis = new FileInputStream(file);
-		    BufferedInputStream bis = new BufferedInputStream(fis);
-		    BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
+		    fis = new FileInputStream(file);
+		    bis = new BufferedInputStream(fis);
+		    bos = new BufferedOutputStream(response.getOutputStream());
 		    
 		    int count = 0;
 		    while ((count = bis.read(data)) != -1) {
@@ -386,7 +386,25 @@ public class BoardServiceImpl implements BoardService{
 			e.printStackTrace(printStream);
 			String stackTraceString=out.toString();
 		    logger.error("error : "+stackTraceString);
-		} 
+		} finally { 
+			try {
+				 if (fis != null) {						 
+					 fis.close();
+				 }
+				 if (bis != null)
+			        bis.close();
+			    if (bos != null)
+			        bos.close();
+			} catch (IOException e) {
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				PrintStream printStream = new PrintStream(out);
+		
+				e.printStackTrace(printStream);
+				String stackTraceString=out.toString();
+			    logger.error("error : "+stackTraceString);
+			}
+	   
+		}
 	}
 
 	@Override
@@ -443,7 +461,7 @@ public class BoardServiceImpl implements BoardService{
 	
 		
 		//PagingDto(게시글 갯수,현재페이지,페이지당 게시글 수,화면의 페이지수)
-		PagingDto pagingDto=new PagingDto(count, curPage,3, 5);
+		PagingDto pagingDto=new PagingDto(count, curPage,10, 5);
 		int start = pagingDto.getPageBegin();
 		int end = pagingDto.getPageEnd();
 		
@@ -472,12 +490,25 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public void getBoardNum(HttpServletRequest request) {
 		int board_num=Integer.parseInt(request.getParameter("board_num"));
+	
+		String board_typeCode=request.getParameter("board_typeCode");
+		String typeName=session.selectOne("code.selectCodeName",board_typeCode);
+		
 		request.setAttribute("board_num", board_num);
+		request.setAttribute("board_typeCode", board_typeCode);
+		request.setAttribute("typeName", typeName);
 	}
 
 	@Override
 	public void reply(HttpServletRequest request, MultipartFile file1) {
+		String board_writer=request.getSession().getAttribute("mem_id").toString();
+		String board_typeCode=request.getParameter("board_typeCode");
+		String board_title=request.getParameter("board_title");
+		board_title="&nbsp;ㄴ[RE]&nbsp; "+board_title;
+		String board_content=request.getParameter("board_content");
+
 		int board_num=Integer.parseInt(request.getParameter("board_num"));
+
 		int board_subNum=session.selectOne("board.maxSubNum", board_num);
 		board_subNum=board_subNum+1;
 		
@@ -485,10 +516,7 @@ public class BoardServiceImpl implements BoardService{
 		String file_oriName=""; //원본 이름
 		long file_size=0; //파일 사이즈
 		
-		String board_writer=request.getSession().getAttribute("mem_id").toString();
-		String board_typeCode=request.getParameter("board_typeCode");
-		String board_title=request.getParameter("board_title");
-		String board_content=request.getParameter("board_content");
+	
 		
 		
 		BoardDto boardDto=new BoardDto();
@@ -521,21 +549,24 @@ public class BoardServiceImpl implements BoardService{
 			boardDto.setFile_saveName(file_saveName);
 			session.insert("board.insert4",boardDto);
 			
-			
-			
-			fileDto.setBoard_num(board_num);
+			int board_num2=session.selectOne("board.getBoardNum",file_saveName);
+			fileDto.setBoard_num(board_num2);
 			fileDto.setFile_oriName(file_oriName);
         	fileDto.setFile_saveName(file_saveName);
         	fileDto.setFile_size(file_size);
         	fileDto.setFile_writer(board_writer);
-        	fileDto.setBoard_num(board_num);
         	session.insert("file.insertFile",fileDto);
         	
 			try {
 				//파일 저장
 				file1.transferTo(new File(filePath+file_saveName));
 			}catch (Exception e) {
-				e.printStackTrace();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				PrintStream printStream = new PrintStream(out);
+		
+				e.printStackTrace(printStream);
+				String stackTraceString=out.toString();
+			    logger.error("error : "+stackTraceString);
 			}
 		}else {  //파일 존재 x
 			session.insert("board.insert3",boardDto);
@@ -543,7 +574,7 @@ public class BoardServiceImpl implements BoardService{
 		
 		
 		request.setAttribute("board_typeCode", board_typeCode);
-		logger.info("게시글 등록 : 종류-"+board_typeCode);
+		logger.info("게시글 답글 등록 : 원글-"+board_num);
 	}
 	
 	

@@ -5,12 +5,12 @@
 	<insert id="insert1" parameterType="boardDto" >
 		INSERT INTO board
 		(board_num,board_title,board_writer,board_content,board_typeCode,board_time,board_oriNum,board_subNum)
-		VALUES(board_num_seq.NEXTVAL,#{board_title},#{board_writer},#{board_content},#{board_typeCode},SYSDATE,0,0)
+		VALUES(board_num_seq.NEXTVAL,#{board_title},#{board_writer},#{board_content},#{board_typeCode},SYSDATE,board_num_seq.NEXTVAL,0)
 	</insert>
 	<insert id="insert2" parameterType="boardDto">
 		INSERT INTO board
 		(board_num,board_title,board_writer,board_content,board_typeCode,board_time,file_saveName,board_oriNum,board_subNum)
-		VALUES(board_num_seq.NEXTVAL,#{board_title},#{board_writer},#{board_content},#{board_typeCode},SYSDATE,#{file_saveName},0,0)
+		VALUES(board_num_seq.NEXTVAL,#{board_title},#{board_writer},#{board_content},#{board_typeCode},SYSDATE,#{file_saveName},board_num_seq.NEXTVAL,0)
 	</insert>
 	<insert id="insert3" parameterType="boardDto" >
 		INSERT INTO board
@@ -46,6 +46,12 @@
 		DELETE FROM board
 		WHERE board_num=#{board_num}
 	</delete>
+	<!-- subNum이 0인것 찾기 =>원글 -->
+	<select id="subNum" parameterType="int" resultType="int">
+		SELECT board_subNum
+		FROM board
+		WHERE board_num=#{board_num}
+	</select>
 	<!-- subNum 중에 가장 큰 수 -->
 	<select  id="maxSubNum" parameterType="int" resultType="int">
 		select max(board_subNum)
@@ -60,7 +66,7 @@
 				from board
 				where board_typeCode=#{board_typeCode}
 		<include refid="search"></include>
-		ORDER BY board_num desc ,board_subNum asc
+		ORDER BY board_oriNum desc ,board_subNum asc
 					) A
 				)WHERE rn BETWEEN #{start} AND #{end}
 	</select>
