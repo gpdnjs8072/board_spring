@@ -10,11 +10,14 @@ public class BoardDto {
 	private String board_time;
 	private String typeName;
 	private String file_saveName;
+	private int board_oriNum;
+	private int board_subNum;
 	
 	public BoardDto() {}
 
 	public BoardDto(int board_num, String board_title, String board_writer, String board_content, String board_typeCode,
-			int board_viewCount, String board_time, String typeName, String file_saveName) {
+			int board_viewCount, String board_time, String typeName, String file_saveName, int board_oriNum,
+			int board_subNum) {
 		super();
 		this.board_num = board_num;
 		this.board_title = board_title;
@@ -25,6 +28,8 @@ public class BoardDto {
 		this.board_time = board_time;
 		this.typeName = typeName;
 		this.file_saveName = file_saveName;
+		this.board_oriNum = board_oriNum;
+		this.board_subNum = board_subNum;
 	}
 
 	public int getBoard_num() {
@@ -97,6 +102,22 @@ public class BoardDto {
 
 	public void setFile_saveName(String file_saveName) {
 		this.file_saveName = file_saveName;
+	}
+
+	public int getBoard_oriNum() {
+		return board_oriNum;
+	}
+
+	public void setBoard_oriNum(int board_oriNum) {
+		this.board_oriNum = board_oriNum;
+	}
+
+	public int getBoard_subNum() {
+		return board_subNum;
+	}
+
+	public void setBoard_subNum(int board_subNum) {
+		this.board_subNum = board_subNum;
 	}
 
 	

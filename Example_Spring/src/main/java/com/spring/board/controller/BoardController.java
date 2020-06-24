@@ -89,8 +89,8 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/board/private/reply")
-	public ModelAndView reply(ModelAndView mView,HttpServletRequest request) {
-		
+	public ModelAndView reply(ModelAndView mView,HttpServletRequest request,@RequestParam("file1") MultipartFile file1) throws IOException {
+		service.reply(request, file1);
 		mView.setViewName("board/private/reply.tiles");
 		return mView;
 	}

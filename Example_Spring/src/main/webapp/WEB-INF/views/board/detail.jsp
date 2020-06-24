@@ -59,6 +59,9 @@
 			
 			<a href="javascript:deleteConfirm()">삭제</a>
 		</c:if>
+		<c:if test="${board_subNum eq '0' }">
+			<a href="private/reply_form.do?board_num=${dto.board_num }">답글쓰기</a>
+		</c:if>
 </div>
 <script>
 	function deleteConfirm(){
