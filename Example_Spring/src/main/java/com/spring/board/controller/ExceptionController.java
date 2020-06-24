@@ -9,10 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
 public class ExceptionController {
-//	@RequestMapping("/exception/denial")
-//	public String denial() {
-//		return "exception/denial.tiles";
-//	}
+
 //	
 //	@RequestMapping("/exception/404")
 //	public String error400(){

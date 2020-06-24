@@ -100,7 +100,6 @@
 	<beans:bean id="BoardAdminInterceptor" class="com.spring.board.interceptor.BoardAdminInterceptor"/>
 	<!-- 이미 로그인 한 상태 -->
 	<beans:bean id="AlreadyLoginInterceptor" class="com.spring.board.interceptor.AlreadyLoginInterceptor"/>
-	
 	<!-- logger 공통 -->
 	<beans:bean id="LoggerInterceptor" class="com.spring.board.interceptor.LoggerInterceptor"/>
 	<!-- 인터셉터 매핑정보 -->
@@ -120,8 +119,10 @@
 		</interceptor> 
 		<!-- 게시판 세션체크 매핑 --> 
 		<interceptor>
-			<mapping path="/board/private/insert_form.do?board_type=201"/>			
-			<mapping path="/board/private/insert.do?board_type=201"/>			
+			<mapping path="/board/private/insert_form.do"/>			
+			<mapping path="/board/private/insert.do"/>	
+			<mapping path="/board/private/reply_form.do"/>			
+			<mapping path="/board/private/reply.do"/>		
 			<beans:ref bean="BoardAdminInterceptor"/>
 		</interceptor>
 		<!-- 이미 로그인 한 상태 매핑 -->

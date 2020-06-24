@@ -41,4 +41,9 @@ public class HomeController {
 		return "index.tiles";
 	}
 	
+	@RequestMapping("/exception/denial")
+	public String denial() {
+		return "exception/denial.tiles";
+	}
+	
 }
