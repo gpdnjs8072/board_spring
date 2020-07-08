@@ -66,7 +66,7 @@
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
-		<beans:property name="order" value="2"/>
+		<beans:property name="order" value="2"/>  <!-- tiles를 위해 우선순위 2로 -->
 	</beans:bean>
 	
 	<context:component-scan base-package="com.spring.board" />

@@ -6,11 +6,11 @@
 <head> 
 	<meta charset="UTF-8" /> 
 	<title>title</title> 
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap.css" />
+<%-- <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap-theme.min.css">
 <script src="${pageContext.request.contextPath }/resources/js/jquery-3.3.1.js"></script>
-<script src="${pageContext.request.contextPath }/resources/js/bootstrap.js"></script>
+<script src="${pageContext.request.contextPath }/resources/js/bootstrap.js"></script> --%>
 
 	<script src="//code.jquery.com/jquery.min.js"></script>
         

@@ -9,7 +9,6 @@
 
 </head>
 <body>
-
 	<script>
 		alert("회원 상태/권한이 변경되었습니다.");
 		location.href=

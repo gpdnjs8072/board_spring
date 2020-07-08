@@ -18,7 +18,7 @@
 		<spring:message code="mem.id"/> : <input type="text" name="mem_id" id="mem_id" required="required"/> 
 		<p id="exist" ></p>
 		<spring:message code="mem.pwd"/> : <input type="password" name="mem_pwd" id="mem_pwd" required="required" /><br />
-		<spring:message code="mem.pwd"/> CHECK : <input type="password" name="mem_pwd2" id="mem_pwd2"  required="required"/><br />
+		비밀번호 확인 : <input type="password" name="mem_pwd2" id="mem_pwd2"  required="required"/><br />
 		<spring:message code="mem.name"/> : <input type="text" name="mem_name" id="mem_name" required="required" /><br />
 		<spring:message code="mem.email"/> : <input type="email" name="mem_email" id="mem_email" required="required" />
 		<p id="exist2" ></p>
@@ -28,11 +28,13 @@
 	</form>
 	</div>
 	<script>
-		var isExistId=false;
+		
+		
+		
 		var mem_id=null;
 		$("#mem_id").on("input",function(){
-			
 			mem_id=$("#mem_id").val();
+			
 			$.ajax({
 				url:"${pageContext.request.contextPath }/member/existId.do",
 				method:"GET",     //요청 메소드
@@ -41,23 +43,21 @@
 					if(responseData.isExist){ //이미 존재하는 아이디라면
 						$("#exist").text("아이디가 존재합니다.");
 						$("#exist").css("color","red");
-						isExistId=true;
-						$("#insertBtn").attr("disabled", true);
+						/* isExistId=true; */
+						/*  $("#insertBtn").attr("disabled", true);  */
 					}else{
 						$("#exist").text("사용가능한 아이디입니다.");
 						$("#exist").css("color","green");
-						isExistId=false;
-						$("#insertBtn").attr("disabled", false);
+						/* isExistId=false; */
+						/*  $("#insertBtn").attr("disabled", false);  */
 					}
 					
 				}
 			});
-			if(mem_id==""){
-				$("#exist").text()="";
-				
-			}
+			button();
+			isEmpty();
 		});
-		var isExistEmail=false;
+		
 		var mem_email=null;
 		$("#mem_email").on("input",function(){
 			
@@ -70,40 +70,66 @@
 					if(responseData.isExistEmail){ //이미 존재하는 아이디라면
 						$("#exist2").text("이메일이 존재합니다.");
 						$("#exist2").css("color","red");
-						isExistEmail=true;
-						/* $("#insertBtn").attr("disabled", true); */
+						/* isExistEmail=true; */
+						/*  $("#insertBtn").attr("disabled", true); */
 					}else{
 						$("#exist2").text("사용가능한 이메일입니다.");
 						$("#exist2").css("color","green");
-						isExistEmail=false;
-						/* $("#insertBtn").attr("disabled", false); */
+						/* isExistEmail=false; */
+						/*   $("#insertBtn").attr("disabled", false);  */
 					}
 					
 				}
 			});
-			if(mem_email==""){
-				$("#exist2").text()="";
-				
-			}
+			button();
 		});
 		
-		if(!isExist||!isExistEmail){
-			$("#insertBtn").attr("disabled", true);
-		}else{
-			$("#insertBtn").attr("disabled", false);
+		
+		function button(){
+			var isId=document.getElementById('exist').innerText;
+			
+			var isEmail=document.getElementById('exist2').innerText;
+			
+			var isExistId=false;
+			var isExistEmail=false;
+			if(isId.includes("사용")){
+				isExistId=true;
+			}else{
+				isExisId=false;
+			}
+			 if(isEmail.includes("사용")){
+				 isExistEmail=true;
+			}else{
+				isExistEmail=false;
+			}
+			
+			if(isExistId&&isExistEmail){
+				$("#insertBtn").attr("disabled", false);
+			
+			}else{
+				$("#insertBtn").attr("disabled", true);
+			} 
+			
 		}
 		
+		function isEmpty(){
+			var inputId=document.getElementById('mem_id').innerText;
+			console.log(inputId);
+			if(inputId.length==0){
+				console.log("d");
+				$("#exist").text("");
+				
+			}
+			
+		}
 		$("#insertBtn").on("click",function(){
 			var pwd=$("#mem_pwd").val();
 			var pwd2=$("#mem_pwd2").val();
+		
 			if(pwd!=pwd2){
 				alert("비밀번호가 일치하지 않습니다.");
 				return false;
 			}
-			
-			
-			
-		
 		});
 		
 	</script>

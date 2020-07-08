@@ -48,6 +48,7 @@ public class MemberServiceImpl implements MemberService{
 	//이메일 중복확인
 	@Override
 	public Map<String, Object> isExistEmail(String mem_email) {
+		
 		String isExistEmail=session.selectOne("member.isExistEmail",mem_email);
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("isExistEmail", isExistEmail);
