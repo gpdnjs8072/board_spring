@@ -127,18 +127,18 @@
 		</dependency>    
 		<!-- 추가 의존 라이브러리 -->
 		<!-- MyBatis 라이브러리 -->
-	  	<dependency>
+		 	<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
 			<version>3.2.8</version>
 		</dependency>
-	  	<dependency>
+		 	<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
 			<version>1.2.0</version>
 		</dependency>
 		<!-- Spring JDBC 라이브러리 -->
-	  	<dependency>
+		 	<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>4.0.0.RELEASE</version>

@@ -78,12 +78,10 @@ public class MemberController {
 		if(url==""||url==null){//url이 없으면
 			request.setAttribute("url", "no");
 		}else {
-			
 			String encodedUrl=URLEncoder.encode(url);
 			request.setAttribute("encodedUrl", encodedUrl);
 			request.setAttribute("url", url);
 		}
-	
 		service.validMember(dto, request);
 		mView.setViewName("member/login");
 		return mView;
