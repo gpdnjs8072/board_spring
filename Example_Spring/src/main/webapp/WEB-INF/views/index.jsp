@@ -13,6 +13,8 @@
 </head>
 <body>
 <div class="container">
+	<p>auth : ${mem_authCode }</p>
+	<p>id: ${mem_id }</p>
 	<h3>INDEX</h3>
 	<div class="well">
 		<spring:message code="language"/>
@@ -24,8 +26,11 @@
 		
 		<p>mem.id : <spring:message code="mem.id" ></spring:message></p>
 		<p>board.title : <spring:message code="board.title"></spring:message></p> 
-
 	</div>
+	
+		<a href="user.do">USER</a>
+		<a href="manager.do">MANAGER</a>
+		<a href="admin.do">ADMIN</a>
 </div>
 
 	<script>

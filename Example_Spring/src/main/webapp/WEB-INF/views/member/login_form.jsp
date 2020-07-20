@@ -12,9 +12,9 @@
 	<div class="container">
 	<h2>로그인</h2>
 	<form action="login.do" method="post">
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+			<input type="hidden" name="url" id="url" value="${url }" />
 		<table>
-			<tr>
-			<input type="hidden" name="url" id="url" value="${url }" /></tr> 
 			<tr>
 				<th>
 					<label for="mem_id"><spring:message code="mem.id"/></label>

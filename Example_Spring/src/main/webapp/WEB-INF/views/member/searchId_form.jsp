@@ -16,6 +16,7 @@
 	
 
 	 <form action="searchId.do" method="post">
+	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	 	<table >
 	 	<tbody >
 	 		<tr>

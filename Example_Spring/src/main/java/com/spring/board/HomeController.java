@@ -46,4 +46,18 @@ public class HomeController {
 		return "exception/denial.tiles";
 	}
 	
+	//권한 확인하는 페이지
+	@RequestMapping("/user")
+	public String user() {
+		return "user.tiles";
+	}
+	@RequestMapping("/manager")
+	public String m() {
+		return "manager.tiles";
+	}
+	@RequestMapping("/admin")
+	public String a() {
+		return "admin.tiles";
+	}
+	
 }

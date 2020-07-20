@@ -10,6 +10,7 @@
 <div class="container">
 	<h2>글 수정</h2>
    <form action="update.do" method="post" enctype="multipart/form-data">
+   	  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
    	  <input type="hidden" name="searchOption" value="${map.searchOption }" />
    	  <input type="hidden" name="keyword" value="${map.keyword }" />
    	  <input type="hidden" name="curPage" value="${map.curPage }" />

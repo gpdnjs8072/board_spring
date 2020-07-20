@@ -15,6 +15,7 @@
 	<div class="container">
 	<h1>회원 가입 </h1>
 	<form action="signup.do" method="post">
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<spring:message code="mem.id"/> : <input type="text" name="mem_id" id="mem_id" required="required"/> 
 		<p id="exist" ></p>
 		<spring:message code="mem.pwd"/> : <input type="password" name="mem_pwd" id="mem_pwd" required="required" /><br />

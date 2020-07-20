@@ -9,9 +9,10 @@
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
 		<java-version>1.8</java-version>
-		<org.springframework-version>4.0.0.RELEASE</org.springframework-version>
+		<org.springframework-version>4.3.2.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
+		<security.version>4.2.3.RELEASE</security.version>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -127,21 +128,26 @@
 		</dependency>    
 		<!-- 추가 의존 라이브러리 -->
 		<!-- MyBatis 라이브러리 -->
-		 	<dependency>
+	  	<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
 			<version>3.2.8</version>
 		</dependency>
-		 	<dependency>
+	  	<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
 			<version>1.2.0</version>
 		</dependency>
 		<!-- Spring JDBC 라이브러리 -->
-		 	<dependency>
+	  	<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>4.0.0.RELEASE</version>
+			<version>4.3.2.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
 		</dependency>
 		<!-- 파일업로드 처리를 위한 라이브러리 (SmartEditor 에서도 필요함)-->
 		<dependency>
@@ -172,28 +178,46 @@
 	  	<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
-			<version>4.0.0.RELEASE</version>
+			<version>4.3.2.RELEASE</version>
 		</dependency>
 	  	<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 			<version>1.8.0</version>
 		</dependency>
-	  	<!-- Spring Security 관련 라이브러리 -->
-	  
+			<!-- Spring Security 관련 라이브러리 -->
+		<dependency> 
+		    <groupId>org.springframework.security</groupId> 
+		    <artifactId>spring-security-core</artifactId> 
+		    <version>${security.version}</version> 
+		  </dependency> 
+		  <dependency> 
+		    <groupId>org.springframework.security</groupId> 
+		    <artifactId>spring-security-web</artifactId> 
+		    <version>${security.version}</version> 
+		  </dependency> 
+		  <dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-config</artifactId>
+		    <version>${security.version}</version> 
+		  </dependency>
+		  <dependency> 
+		    <groupId>org.springframework.security</groupId> 
+		    <artifactId>spring-security-taglibs</artifactId> 
+		    <version>${security.version}</version> 
+		  </dependency> 
+		  <dependency> 
+		    <groupId>org.springframework.security</groupId> 
+		    <artifactId>spring-security-test</artifactId> 
+		    <version>${security.version}</version> 
+		  </dependency>  
 
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>4.2.1.RELEASE</version>
-		</dependency>
-
-	
+		
 		<!-- 트렌젝션 처리를 위한 라이브러리 -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-tx</artifactId>
-		    <version>4.0.0.RELEASE</version>
+		    <version>4.3.2.RELEASE</version>
 		</dependency>
 		<!-- json 데이터를 증록하기 위한 디펜던시 -->
 		<dependency>
@@ -222,6 +246,8 @@
             <artifactId>tiles-extras</artifactId>
             <version>3.0.8</version>
         </dependency>
+        
+        
 	</dependencies>
     <build>
         <plugins>

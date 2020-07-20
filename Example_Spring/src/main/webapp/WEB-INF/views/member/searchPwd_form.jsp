@@ -16,6 +16,7 @@
 	
 	
 	<form action="newPwd_form.do" method="post">
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		
 			<label for="mem_id">아이디</label>
 			<input type="text" name="mem_id" id="mem_id" required="required"  /><br />

@@ -10,6 +10,7 @@
 <div class="container">
 <h2>회원 정보 수정</h2>
 	<form action="info.do" method="post">
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<table>	
 			<tr>
 				<th>아이디</th>

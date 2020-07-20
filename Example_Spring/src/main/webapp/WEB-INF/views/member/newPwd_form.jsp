@@ -14,6 +14,7 @@
 	
 
 	<form action="newPwd.do" method="post">
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<input type="hidden" name="mem_id" id="mem_id" value="${mem_id }"/>
 		<div>
 			<label for="mem_pwd">새 비밀번호</label>

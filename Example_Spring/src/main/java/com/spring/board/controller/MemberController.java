@@ -60,43 +60,43 @@ public class MemberController {
 	}
 	
 	
-	//로그인 폼
-	@RequestMapping("/member/login_form")
-	public ModelAndView login_form(HttpServletRequest request) {
-		//url
-		String url=request.getParameter("url");
-		request.setAttribute("url", url);
-		
-		return new ModelAndView("member/login_form.tiles");
-	}
-	
-	//로그인
-	@RequestMapping("/member/login")
-	public ModelAndView login(ModelAndView mView,@ModelAttribute("dto") MemberDto dto,HttpServletRequest request) {
-		//url
-		String url=request.getParameter("url");
-		if(url==""||url==null){//url이 없으면
-			request.setAttribute("url", "no");
-		}else {
-			String encodedUrl=URLEncoder.encode(url);
-			request.setAttribute("encodedUrl", encodedUrl);
-			request.setAttribute("url", url);
-		}
-		service.validMember(dto, request);
-		mView.setViewName("member/login");
-		return mView;
-	}
-	
-	//로그아웃
-	@RequestMapping("/member/private/logout")
-	public ModelAndView logout(HttpSession session,ModelAndView mView) {
-		if(session.getAttribute("mem_id")!=null) {
-			session.invalidate();		
-		}
-		mView.setViewName("member/private/logout");
-		return mView;
-	}
-	
+//	//로그인 폼
+//	@RequestMapping("/member/login_form")
+//	public ModelAndView login_form(HttpServletRequest request) {
+//		//url
+//		String url=request.getParameter("url");
+//		request.setAttribute("url", url);
+//		
+//		return new ModelAndView("member/login_form.tiles");
+//	}
+//	
+//	//로그인
+//	@RequestMapping("/member/login")
+//	public ModelAndView login(ModelAndView mView,@ModelAttribute("dto") MemberDto dto,HttpServletRequest request) {
+//		//url
+//		String url=request.getParameter("url");
+//		if(url==""||url==null){//url이 없으면
+//			request.setAttribute("url", "no");
+//		}else {
+//			String encodedUrl=URLEncoder.encode(url);
+//			request.setAttribute("encodedUrl", encodedUrl);
+//			request.setAttribute("url", url);
+//		}
+//		service.validMember(dto, request);
+//		mView.setViewName("member/login");
+//		return mView;
+//	}
+//	
+//	//로그아웃
+//	@RequestMapping("/member/private/logout")
+//	public ModelAndView logout(HttpSession session,ModelAndView mView) {
+//		if(session.getAttribute("mem_id")!=null) {
+//			session.invalidate();		
+//		}
+//		mView.setViewName("member/private/logout");
+//		return mView;
+//	}
+//	
 	//아이디찾기 폼
 	@RequestMapping("/member/searchId_form")
 	public ModelAndView searchId_form() {

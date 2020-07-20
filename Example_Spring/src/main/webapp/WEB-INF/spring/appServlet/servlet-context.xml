@@ -5,14 +5,16 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 	
 	
-	<beans:bean id="dataSource" 
+<!-- 	<beans:bean id="dataSource" 
 		class="org.springframework.jndi.JndiObjectFactoryBean">
 		<beans:property name="jndiName" value="java:comp/env/jdbc/myoracle"/>
 	</beans:bean>
@@ -27,19 +29,12 @@
 	<beans:bean class="org.mybatis.spring.SqlSessionTemplate">
 		<beans:constructor-arg name="sqlSessionFactory" 
 			ref="sessionFactory"/>
-	</beans:bean>
+	</beans:bean> -->
 	
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
-	<!-- Transaction Manager  설정 -->
-	<beans:bean id="txManager" 
-	class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<beans:property name="dataSource" ref="dataSource"/>
-	</beans:bean>
-	
-	<!-- 어노테이션으로 트렌젝션 설정이 가능하도록 -->
-	<tx:annotation-driven transaction-manager="txManager"/>
+
 	
 	<!-- Tiles 뷰 리졸버 -->
 	<beans:bean id="tielsViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
@@ -91,33 +86,45 @@
     </interceptors>	 
     
     
-    <!-- 인터셉터 bean 설정 -->
-	<!-- 사용자 세션체크 bean -->
+    <!-- security , secured 어노테이션을 사용할 수 있는 코드-->
+	<security:global-method-security secured-annotations="enabled" />
+		
+	<beans:bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<beans:property name="exceptionMappings"> 
+			<beans:props> 
+				<beans:prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">/home</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	
+    
+    <!--  인터셉터 bean 설정
+	사용자 세션체크 bean
 	<beans:bean id="loginInterceptor" class="com.spring.board.interceptor.LoginInterceptor"/>
-	<!-- 회원 관리자 세션체크 bean -->
+	회원 관리자 세션체크 bean
 	<beans:bean id="MemberAdminInterceptor" class="com.spring.board.interceptor.MemberAdminInterceptor"/>
-	<!-- 게시판 세션체크 bean -->
+	게시판 세션체크 bean
 	<beans:bean id="BoardAdminInterceptor" class="com.spring.board.interceptor.BoardAdminInterceptor"/>
-	<!-- 이미 로그인 한 상태 -->
+	이미 로그인 한 상태
 	<beans:bean id="AlreadyLoginInterceptor" class="com.spring.board.interceptor.AlreadyLoginInterceptor"/>
-	<!-- logger 공통 -->
+	logger 공통
 	<beans:bean id="LoggerInterceptor" class="com.spring.board.interceptor.LoggerInterceptor"/>
-	<!-- 인터셉터 매핑정보 -->
+	인터셉터 매핑정보
 	<interceptors>
 	
-		<!-- 사용자 세션체크 매핑 -->
+		사용자 세션체크 매핑
 		<interceptor>
 			<mapping path="/member/private/*"/>
 			<mapping path="/board/private/*"/>
 			<mapping path="/memberAdmin/*"/>			
 			<beans:ref bean="loginInterceptor"/>
 		</interceptor> 
-		<!-- 회원 관리자 세션체크 매핑 --> 
+		회원 관리자 세션체크 매핑 
 		<interceptor>
 			<mapping path="/memberAdmin/*"/>			
 			<beans:ref bean="MemberAdminInterceptor"/>
 		</interceptor> 
-		<!-- 게시판 세션체크 매핑 --> 
+		게시판 세션체크 매핑 
 		<interceptor>
 			<mapping path="/board/private/insert_form.do"/>			
 			<mapping path="/board/private/insert.do"/>	
@@ -125,13 +132,13 @@
 			<mapping path="/board/private/reply.do"/>		
 			<beans:ref bean="BoardAdminInterceptor"/>
 		</interceptor>
-		<!-- 이미 로그인 한 상태 매핑 -->
+		이미 로그인 한 상태 매핑
 		<interceptor>
 			<mapping path="/member/*"/>
 			<exclude-mapping path="/member/private/*"/>			
 			<beans:ref bean="AlreadyLoginInterceptor"/>
 		</interceptor>
-		<!-- logger 매핑 -->
+		logger 매핑
 		<interceptor>
 			<mapping path="/*"/>			
 			<mapping path="/*/*"/>			
@@ -140,5 +147,7 @@
 			<beans:ref bean="LoggerInterceptor"/>
 		</interceptor> 
 	</interceptors>
+	 -->
+	
 	
 </beans:beans>

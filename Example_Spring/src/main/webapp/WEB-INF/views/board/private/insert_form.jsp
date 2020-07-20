@@ -13,6 +13,7 @@
 
 
 <form action="insert.do" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<label for="board_typeCode">게시글 종류</label>
 		<input type="hidden" name="board_typeCode" id="board_typeCode" value="${board_typeCode }" required="required"/>${typeName } <br />
 		

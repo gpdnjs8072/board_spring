@@ -2,7 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri = "http://tiles.apache.org/tags-tiles" prefix = "tiles"%> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <div class="navbar navbar-inverse navbar-fixed-top">
+
 	<div class="container">
 		<!-- 홈페이지 링크와 버튼을 넣어둘 div -->
 		<div class="navbar-header">
@@ -40,6 +42,19 @@
 						</a>
 					</li>
 				</c:if>
+				<sec:authorize access="hasRole('ROLE_ADMIN')"> 
+					<li>
+						<a href="<c:url value='/memberAdmin/memberList.do' />">회원 목록</a>
+					</li> 
+				</sec:authorize>
+			<%-- 	<sec:authorize access="hasRole('ROLE_USER')"> 
+					<li>
+						<a href="<c:url value='/member/private/logout.do' />">로그아웃11</a>
+					</li> 
+				</sec:authorize> --%>
+				
+
+				
 			</ul>
 			<c:choose>
 				<c:when test="${empty sessionScope.mem_id }">
@@ -59,7 +74,15 @@
 								${sessionScope.mem_id }
 							</a>
 						</strong>
-						<a class="navbar-link" href="${pageContext.request.contextPath }/member/private/logout.do">로그아웃</a>
+						<a class="navbar-link" href="${pageContext.request.contextPath }/member/private/logout.do">로그아웃11</a>
+						<a class="navbar-link" >
+							<sec:authorize access="isAuthenticated()">
+							    <form action="member/private/logout.do" method="POST" id="fr">
+							        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+							        <button type="submit">LOGOUT</button>
+							    </form>
+							</sec:authorize>
+						</a>
 					</p>
 				</c:otherwise>
 			</c:choose>
