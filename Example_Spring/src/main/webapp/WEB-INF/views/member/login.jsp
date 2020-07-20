@@ -8,84 +8,61 @@
 <title>Insert title here</title>
 </head>
 <body>
-<c:choose>
-	<c:when test="${url ne 'no'}">
-		<c:choose>
-		
-			<c:when test="${error1 eq 'changeStopState'}">
-				<script>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script> 
+<script>
+	new Vue({
+		el:"#container",
+		data:{
+			url:"${url}",
+			mem_id:"${mem_id}",
+			error1:"${error1}",
+			error2:"${error2}",
+			error3:"${error3}",
+			error4:"${error4}",
+		},
+		created:function(){
+			if(this.url!="no"){
+				if(this.error1.length>0){
 					alert("5회 이상 실패로 해당 아이디가 정지되었습니다.");
 					location.href="login_form.do?url=${encodedUrl}";
-				</script>		
-			</c:when>
-			<c:when test="${error2 eq 'fail'}">
-				<script>
+				}else if(this.error2.length>0){
 					alert("사용자 인증정보가 잘못되었습니다.");
 					location.href="login_form.do?url=${encodedUrl}";
-				</script>		
-			</c:when>
-			
-			<c:when test="${error3 eq 'stop'}">
-				<script>
+				}else if(this.error3.length>0){
 					alert("정지된 회원입니다.");
 					location.href="login_form.do?url=${encodedUrl}";
-				</script>		
-			</c:when>
-			<c:when test="${error4 eq 'withdraw'}">
-				<script>
+				}else if(this.error4.length>0){
 					alert("탈퇴한 회원입니다.");
 					location.href="login_form.do?url=${encodedUrl}";
-				</script>		
-			</c:when>
-		
-			<c:when test="${not empty mem_id}">
-				<script>
+				}else if(this.mem_id.length>0){
 					alert("${mem_id} 님이 로그인하셨습니다.");
 					location.href="${url}";
-				</script>
-			</c:when>
-		</c:choose> 
-	</c:when>
-	<c:otherwise>
-		<c:choose>
-	
-		<c:when test="${error1 eq 'changeStopState'}">
-			<script>
-				alert("5회 이상 실패로 해당 아이디가 정지되었습니다.");
-				location.href="login_form.do";
-			</script>		
-		</c:when>
-		<c:when test="${error2 eq 'fail'}">
-			<script>
-				alert("사용자 인증정보가 잘못되었습니다.");
-				location.href="login_form.do";
-			</script>		
-		</c:when>
+				}
+			}else{
+				if(this.error1.length>0){
+					alert("5회 이상 실패로 해당 아이디가 정지되었습니다.");
+					location.href="login_form.do";
+				}else if(this.error2.length>0){
+					alert("사용자 인증정보가 잘못되었습니다.");
+					location.href="login_form.do";
+				
+				}else if(this.error3.length>0){
+					alert("정지된 회원입니다.");
+					location.href="login_form.do";
+				
+				}else if(this.error4.length>0){
+					alert("탈퇴한 회원입니다.");
+					location.href="login_form.do";
+				}else if(this.mem_id.length>0){
+					alert("${mem_id} 님이 로그인하셨습니다.");
+					location.href="../index.do";
+				}
+			}
+		}
 		
-		<c:when test="${error3 eq 'stop'}">
-			<script>
-				alert("정지된 회원입니다.");
-				location.href="login_form.do";
-			</script>		
-		</c:when>
-		<c:when test="${error4 eq 'withdraw'}">
-			<script>
-				alert("탈퇴한 회원입니다.");
-				location.href="login_form.do";
-			</script>		
-		</c:when>
-	
-		<c:when test="${not empty mem_id}">
-			<script>
-				alert("${mem_id} 님이 로그인하셨습니다.");
-				location.href="../index.do";
-			</script>
-		</c:when>
-	</c:choose>
-	</c:otherwise>
-</c:choose>
-
-
+	})
+</script>
 	
 </body>
 </html>

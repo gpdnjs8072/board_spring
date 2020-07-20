@@ -6,25 +6,18 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
 </head>
 <body>
 
 
-
-
-	<c:if test="${isExist eq false}">
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+	<div v-if="${isExist eq false }">
 		<script>
 			alert("사용자 인증에 실패했습니다.");
 			location.href="searchPwd_form.do";
 		</script>
-	
-	</c:if>
-
-	
-		
-
-
+	</div>
 
 </body>
 </html>

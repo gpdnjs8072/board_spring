@@ -12,19 +12,6 @@
 		alert("회원 정보가 수정되었습니다.");
 		location.href="../../index.do";
 	</script>
-<%-- <c:choose>
-	<c:when test="${isUpdate eq true }">
-		<script>
-			alert("회원 정보가 수정되었습니다.");
-			location.href="../../index.do";
-		</script>
-	</c:when>
-	<c:otherwise>
-		<script>
-			alert("회원 정보 수정에 실패했습니다.");
-			location.href="../../index.do";
-		</script>
-	</c:otherwise>
-</c:choose> --%>
+
 </body>
 </html>

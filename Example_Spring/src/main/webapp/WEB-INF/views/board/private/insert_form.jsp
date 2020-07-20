@@ -11,47 +11,63 @@
 <div class="container">
 <h2>게시글 등록</h2>
 
-
-<form action="insert.do" method="post" enctype="multipart/form-data">
+<form action="insert.do" method="post" enctype="multipart/form-data" id="fr">
+		
 		<label for="board_typeCode">게시글 종류</label>
-		<input type="hidden" name="board_typeCode" id="board_typeCode" value="${board_typeCode }" required="required"/>${typeName } <br />
+		<input type="hidden" name="board_typeCode" id="board_typeCode" value="${board_typeCode }" required="required"/>
+		${typeName } <br />
 		
 		<label for="board_title">제목</label>
-		<input type="text" name="board_title" id="board_title" required="required"/><br />
+		<input type="text" name="board_title" id="board_title" v-model="board_title"/><br />
 		
 		<label for="board_content">내용</label> 
-		<textarea name="board_content" id="board_content" required="required"></textarea><br />
+		<textarea name="board_content" id="board_content"></textarea><br />
 		 
 		<label for="file1">첨부파일</label>
 		<input type="file" name="file1" id="file1"/><br />
 		
-	<c:choose>
-		<c:when test="${board_typeCode eq '201'}">
-			<c:if test="${mem_authCode eq '003'  }">
-				<button type="submit" onclick="submitContents(this);" id="insertBtn">등록</button>
-			</c:if>
-		</c:when>
-		<c:otherwise>
-			<button type="submit" onclick="submitContents(this);" id="insertBtn">등록</button>
-		</c:otherwise>
-	</c:choose>
 	
+	<div v-if="isNotice">
+		<div v-if="isAdmin">
+			<button type="submit" onclick="submitContents(this);" id="insertBtn" :disabled="board_title.length<=0">등록</button>
+		</div>
+	</div>
+	<div v-else>
+		<button type="submit" onclick="submitContents(this);" id="insertBtn" :disabled="board_title.length<=0">등록</button>
+	</div> 
 </form>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script> 
+<script>
+	
+ 	new Vue({
+		el:"#fr",
+		data: {
+			isAdmin : false,
+			isNotice : false,
+			board_title:"",
+			board_typeCode:"${board_typeCode}",
+			mem_authCode:"${mem_authCode }",
+		},
+		created:function(){
+			
+			
+			if(this.board_typeCode=="201"){
+				this.isNotice=true;
+				if(this.mem_authCode!=""&&this.mem_authCode=="003"){
+					this.isAdmin=true;
+				}
+			}
+			
+		}
+		
+	}) 
+	
+</script>
 <script src="${pageContext.request.contextPath }/SmartEditor/js/HuskyEZCreator.js"></script>
 <script>
-	 <!--내용 입력-->
-	$("#insertBtn").on("click",function(){
-		var title=$("#board_title").val();
-		var content=$("#board_content").val();
-		
-		if(title==""){
-			alert("제목을 입력하세요",function(){
-				
-			},"warning");
-			return false;
-		}
-	}); 
+
 
 	<!--smart Editor 로직-->
 	var oEditors = [];
@@ -105,7 +121,7 @@
 		oEditors.getById["board_content"].setDefaultFont(sDefaultFont, nFontSize);
 	}
 	
-	<!--smart Editor 로직-->
+	<!--smart Editor 로직 -->
 </script>
 </body>
 </html>

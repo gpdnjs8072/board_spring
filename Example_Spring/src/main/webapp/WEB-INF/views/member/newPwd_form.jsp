@@ -13,30 +13,31 @@
 	<br /><br />
 	
 
-	<form action="newPwd.do" method="post">
+	<form action="newPwd.do" method="post" id="fr">
 		<input type="hidden" name="mem_id" id="mem_id" value="${mem_id }"/>
 		<div>
 			<label for="mem_pwd">새 비밀번호</label>
-			<input type="text" name="mem_pwd" id="mem_pwd" required="required" />
+			<input type="text" name="mem_pwd" id="mem_pwd" required="required" v-model="mem_pwd"/>
 		</div>
 		<div>
 			<label for="mem_pwd2">새 비밀번호 확인</label>
-			<input type="text" name="mem_pwd2" id="mem_pwd2"  required="required"/>
+			<input type="text" name="mem_pwd2" id="mem_pwd2"  required="required" v-model="mem_pwd2"/>
 		</div>
-		<button type="submit" id="changeBtn">비밀번호 변경</button>
+		<button type="submit" id="changeBtn" :disabled="mem_pwd!=mem_pwd2">비밀번호 변경</button>
 	</form>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 	<script>
-	
-		$("#changeBtn").on("click",function(){
-			var pwd=$("#mem_pwd").text();
-			var pwd2=$("#mem_pwd2").text();
-			if(pwd!=pwd2){
-				alert("비밀번호가 일치하지 않습니다.");
-				return false;
+		//비밀번호와 새비밀번호의 길이가 맞지않으면 버튼을 비활성화 시킴
+		new Vue({
+			el:"#fr",
+			data:{
+				mem_pwd:'',
+				mem_pwd2:''
 			}
-		});
+		})
 	</script>
-	</div>
+</div>
 </body>
 </html>
 

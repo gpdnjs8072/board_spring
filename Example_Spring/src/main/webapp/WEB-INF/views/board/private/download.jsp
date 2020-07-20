@@ -8,19 +8,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-
-		
-			<script>
-				alert("파일이 다운로드 되었습니다.");
-				location.herf="../detail.do?board_typeCode=${board_typeCode}&board_num=${board_num}";
-			</script>
-	
-		<%-- <c:otherwise>
-			<script>
-				alert("파일 다운로드에 실패했습니다.");
-				location.herf="../detail.do?board_typeCode=${board_typeCode}&board_num=${board_num}";
-			</script>
-		</c:otherwise> --%>
-
+	<script>
+		alert("파일이 다운로드 되었습니다.");
+		location.herf="../detail.do?board_typeCode=${board_typeCode}&board_num=${board_num}";
+	</script>
 </body>
 </html>

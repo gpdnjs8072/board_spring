@@ -12,16 +12,18 @@
 <div class="container">
 	<h2>${typeName }</h2>
 </div>
-<script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+
+<!-- <script>
 
 	// 원하는 페이지로 이동시 검색조건, 키워드 값을 유지하기 위해 
 	function list(page){
 		location.href="/board/board/list.do?board_typeCode=${board_typeCode}"+
 			"&curPage="+page+"&searchOption=${map2.searchOption}"+"&keyword=${map2.keyword}&board_time=${map2.board_time}";
 	}
-</script>
+</script> -->
 
-<div class="container">
+<div class="container" id="container">
 
 	<form name="form1" method="post" action="list.do">
 		<input type="hidden" name="board_typeCode" id="board_typeCode" value="${board_typeCode }" />
@@ -78,49 +80,115 @@
 				</tr>
 			</c:forEach>
 			
-			<!-- 페이징 -->
-		<tr>
+			
+		<!-- 페이징 -->
+		<tr id="paging">
 			<td colspan="5">
 				<!-- 처음페이지로 이동 : 현재 페이지가 1보다 크면  [처음]하이퍼링크를 화면에 출력-->
-				<c:if test="${map2.pagingDto.curBlock > 1}">
-					<a href="javascript:list('1')">&#171;</a>
-				</c:if>
-				
+				<a v-if="curBlock>1" v-on:click="list('1')">&#171;</a>
+			
 				<!-- 이전페이지 블록으로 이동 : 현재 페이지 블럭이 1보다 크면 [이전]하이퍼링크를 화면에 출력 -->
-				<c:if test="${map2.pagingDto.curBlock > 1}">
-					<a href="javascript:list('${map2.pagingDto.prevPage}')">&#60; </a>
-				</c:if>
-				
+				<a v-if="curBlock>1" v-on:click="list('${map2.pagingDto.prevPage}')">&#60; </a>
+	
 				<!-- **하나의 블럭 시작페이지부터 끝페이지까지 반복문 실행 -->
 				<c:forEach var="num" begin="${map2.pagingDto.blockBegin}" end="${map2.pagingDto.blockEnd}">
-					<!-- 현재페이지이면 하이퍼링크 제거 -->
-					<c:choose>
+				 <!-- <div v-for="n in ({{blockBengin}},{{blockEnd}})"> -->
+					
+					<!-- 현재페이지이면 하이퍼링크 제거	x -->	
+					<%-- <span v-if="this.num===this.curPage" style="color: red" >${num }</span>&nbsp;
+				
+					<a v-else v-on:click="list('${num }')">${num }</a>&nbsp; 
+ --%>
+ 					<c:choose>
 						<c:when test="${num == map2.pagingDto.curPage}">
 							<span style="color: red">${num}</span>&nbsp;
 						</c:when>
 						<c:otherwise>
-							<a href="javascript:list('${num}')">${num}</a>&nbsp;
+							<a  v-on:click="list('${num}')">${num}</a>&nbsp;
 						</c:otherwise>
-					</c:choose>
+					</c:choose>					
 				</c:forEach>
 				
-				<!-- 다음페이지 블록으로 이동 : 현재 페이지 블럭이 전체 페이지 블럭보다 작거나 같으면 [다음]하이퍼링크를 화면에 출력 -->
-				<c:if test="${map2.pagingDto.curBlock <= map2.pagingDto.totBlock}">
-					<a href="javascript:list('${map2.pagingDto.nextPage}')">&#62;</a>
-				</c:if>
+
 				
+				<!-- 다음페이지 블록으로 이동 : 현재 페이지 블럭이 전체 페이지 블럭보다 작거나 같으면 [다음]하이퍼링크를 화면에 출력 -->
+				<a v-if="curBlock <= totBlock"  v-on:click="list('${map2.pagingDto.nextPage}')">&#62;</a>
+
 				<!-- 끝페이지로 이동 : 현재 페이지가 전체 페이지보다 작거나 같으면 [끝]하이퍼링크를 화면에 출력 -->
-				<c:if test="${map2.pagingDto.curPage <= map2.pagingDto.totPage}">
-					<a href="javascript:list('${map2.pagingDto.totPage}')">&#187;</a>
-				</c:if>
+				<a v-if="curPage<=totPage" v-on:click="list('${map2.pagingDto.totPage}')">&#187;</a>
+
 			</td>
 		</tr>
 		<!-- 페이징 -->
 		</tbody>
 </table>
 
+	<script>
+		var paging=new Vue({
+			el:"#paging",
+			data:{
+				curBlock:"${map2.pagingDto.curBlock}",
+				prevPage:"${map2.pagingDto.prevPage}",
+				blockBegin:"${map2.pagingDto.blockBegin}",
+				blockEnd:"${map2.pagingDto.blockEnd}",
+				curPage:"${map2.pagingDto.curPage}",
+			
+				totBlock:"${map2.pagingDto.totBlock}",
+				totPage:"${map2.pagingDto.totPage}",
+				nextPage:"${map2.pagingDto.nextPage}"
+			},
+			methods:{
+				// 원하는 페이지로 이동시 검색조건, 키워드 값을 유지하기 위해 
+				list:function(page){
+					location.href="/board/board/list.do?board_typeCode=${board_typeCode}"+
+					"&curPage="+page+"&searchOption=${map2.searchOption}"+"&keyword=${map2.keyword}&board_time=${map2.board_time}";
+					
+				}
+			}
+		})
+	</script>
 
-<c:choose>
+	
+ 	<div id="link">
+		<div v-if="isNotice">
+			<a v-if="isAdmin" href="private/insert_form.do?board_typeCode=${board_typeCode}">글쓰기</a>			
+		</div>
+		<div v-else>
+			<a href="private/insert_form.do?board_typeCode=${board_typeCode}">글쓰기</a>			
+			
+		</div>
+	</div>
+	
+	<script>
+		var link=new Vue({
+			el:"#link",
+			data:{
+				board_typeCode:"${board_typeCode}",
+				mem_authCode:"${mem_authCode}",
+				isAdmin:false,
+				isNotice:false
+			},
+			created:function(){
+				if(this.mem_authCode.length>0 && this.board_typeCode==="201"){
+					this.isNotice=true;
+				}
+				if(this.mem_authCode.length>0&&this.mem_authCode==="003"){
+					this.isAdmin=true;
+				}
+			}
+		})
+	</script>
+	<!-- <script>
+		new Vue({
+			el:'#link',
+			data:{
+				board_typeCode:${board_typeCode},
+				mem_authCode:${mem_authCode}
+			}
+			
+		})
+	</script>  -->
+<%--  <c:choose>
 	<c:when test="${board_typeCode eq '201' }">
 		<c:if test="${mem_authCode eq '003' }">
 			<a href="private/insert_form.do?board_typeCode=${board_typeCode}">글쓰기</a>
@@ -129,7 +197,7 @@
 	<c:otherwise>
 		<a href="private/insert_form.do?board_typeCode=${board_typeCode}">글쓰기</a>
 	</c:otherwise>
-</c:choose>
+</c:choose>  --%>
 </div>
 </body>
 </html>

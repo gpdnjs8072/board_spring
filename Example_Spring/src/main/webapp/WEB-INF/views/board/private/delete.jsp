@@ -9,12 +9,12 @@
 </head>
 <body>
 
-		<script>
-			alert("글이 삭제되었습니다.");
-			location.href="../list.do?board_typeCode=${board_typeCode}"+
-			"&curPage=${map.curPage }&searchOption=${map.searchOption}&keyword=${map.keyword}&board_time=${map.board_time}";
-		</script>
-	
+	<script>
+		alert("글이 삭제되었습니다.");
+		location.href="../list.do?board_typeCode=${board_typeCode}"+
+		"&curPage=${map.curPage }&searchOption=${map.searchOption}&keyword=${map.keyword}&board_time=${map.board_time}";
+	</script>
+
 	
 </body>
 </html>

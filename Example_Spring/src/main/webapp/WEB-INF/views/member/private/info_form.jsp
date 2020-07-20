@@ -9,7 +9,7 @@
 <body>
 <div class="container">
 <h2>회원 정보 수정</h2>
-	<form action="info.do" method="post">
+	<form action="info.do" method="post" id="fr">
 		<table>	
 			<tr>
 				<th>아이디</th>
@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<th>비밀번호</th>
-				<td><input type="password" name="mem_pwd" id="mem_pwd" required="required" /></td>
+				<td><input type="password" name="mem_pwd" id="mem_pwd" required="required" v-model="mem_pwd"/></td>
 			</tr>
 			<tr>
 				<th>비밀번호 확인</th>
-				<td><input type="password" name="mem_pwd2" id="mem_pwd2" required="required" /></td>
+				<td><input type="password" name="mem_pwd2" id="mem_pwd2" required="required" v-model="mem_pwd2" /></td>
 			</tr>
 			<tr>
 				<th>이름</th>
@@ -44,29 +44,30 @@
 				<td>${dto.mem_regdate }</td>
 			</tr>
 		</table>
-		<button type="submit" id="updateBtn">수정하기</button>
-		<button id="deleteBtn" >탈퇴하기</button>
+		<button type="submit" id="updateBtn" :disabled="mem_pwd!=mem_pwd2">수정하기</button>
+		<button id="deleteBtn" v-on:click="deleteBtn" >탈퇴하기</button>
 	</form>
 </div>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+
 	<script>
-		$("#updateBtn").on("click",function(){
-			var pwd=$("#mem_pwd").val();
-			var pwd2=$("#mem_pwd2").val();
-			if(pwd!=pwd2){
-				alert("비밀번호가 일치하지 않습니다.");
-				return false;
+	new Vue({
+		el:"#fr",
+		data:{
+			mem_pwd:'',
+			mem_pwd2:''
+		},
+		methods:{
+			deleteBtn : function(){
+				var isDelete=confirm("탈퇴하시겠습니까?");
+				if(isDelete){
+					location.href="delete.do";
+				}else{
+					false;
+				}
 			}
-			
-		});
-	
-		$("#deleteBtn").on("click",function(){
-			var isDelete=confirm("탈퇴하시겠습니까?");
-			if(isDelete){
-				location.href="delete.do";
-			}else{
-				false;
-			}
-		});
+		}
+	})
 	</script>
 </body>
 </html>

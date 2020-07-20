@@ -12,24 +12,25 @@
 </head>
 <body>
 
-	<div class="container">
+<div class="container">
 	<h1>회원 가입 </h1>
-	<form action="signup.do" method="post">
-		<spring:message code="mem.id"/> : <input type="text" name="mem_id" id="mem_id" required="required"/> 
-		<p id="exist" ></p>
-		<spring:message code="mem.pwd"/> : <input type="password" name="mem_pwd" id="mem_pwd" required="required" /><br />
-		비밀번호 확인 : <input type="password" name="mem_pwd2" id="mem_pwd2"  required="required"/><br />
+	<form action="signup.do" method="post" id="fr">
+		<spring:message code="mem.id"/> : <input type="text" name="mem_id" id="mem_id" required="required" v-model="mem_id"/> 
+		<!-- <p id="exist" v-model="exist"></p> -->
+		<is></is>
+		<br/>
+		<spring:message code="mem.pwd"/> : <input type="password" name="mem_pwd" id="mem_pwd" required="required" v-model="mem_pwd"/><br />
+		비밀번호 확인 : <input type="password" name="mem_pwd2" id="mem_pwd2"  required="required" v-model="mem_pwd2"><br />
 		<spring:message code="mem.name"/> : <input type="text" name="mem_name" id="mem_name" required="required" /><br />
 		<spring:message code="mem.email"/> : <input type="email" name="mem_email" id="mem_email" required="required" />
 		<p id="exist2" ></p>
 		<br />
 		
-		<button type="submit" id="insertBtn">회원 가입</button>
+		<button type="submit" id="insertBtn" :disabled="mem_pwd!=mem_pwd2">회원 가입</button>
 	</form>
-	</div>
-	<script>
-		
-		
+</div>
+	
+<!-- 	<script>
 		
 		var mem_id=null;
 		$("#mem_id").on("input",function(){
@@ -122,15 +123,49 @@
 			}
 			
 		}
-		$("#insertBtn").on("click",function(){
-			var pwd=$("#mem_pwd").val();
-			var pwd2=$("#mem_pwd2").val();
+	
 		
-			if(pwd!=pwd2){
-				alert("비밀번호가 일치하지 않습니다.");
-				return false;
+	</script> -->
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script> 
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+		var vm=new Vue({
+			el:'#fr',
+			data:{
+				mem_id:'',
+				mem_pwd:'',
+				mem_pwd2:'',
+				mem_email:'',
+				isexist:''
+			},
+			components:{
+				"is":{
+					template:'<span>{{ isexist }}</span>'
+				},
+				/* 'notExist':{
+					template:'<span>사용가능한 아이디입니다.</span>'
+				} */
+			},
+			methods:{
+				getId:function(){
+					var vm=this;
+					var isexist=vm.isexist;
+					axios.get("/member/existId.do")
+					     .then(function(response){
+					    	 console.log(isexist);
+							if(response.data===mem_id){
+								console.log(response.data);
+								console.log(response.data.mem_id);
+								isexist="이미 존재하는 아이디 입니다."
+								
+							}else{
+								isexist="사용가능한 아이디 입니다.";
+							}
+							
+					})
+				}
 			}
-		});
+		})
 		
 	</script>
 </body>
