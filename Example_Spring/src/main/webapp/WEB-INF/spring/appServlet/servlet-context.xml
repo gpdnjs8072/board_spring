@@ -17,24 +17,25 @@
 		<beans:property name="jndiName" value="java:comp/env/jdbc/myoracle"/>
 	</beans:bean>
 	
-	<beans:bean id="sessionFactory" 
-		class="org.mybatis.spring.SqlSessionFactoryBean">
+	<beans:bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<beans:property name="dataSource" ref="dataSource"/>
-		<beans:property name="configLocation"
-	value="classpath:com/spring/board/mybatis/Configuration.xml"/>
+	 	<beans:property name="configLocation" value="/WEB-INF/spring/mybatis-config.xml"/> 
 	</beans:bean>
 	
 	<beans:bean class="org.mybatis.spring.SqlSessionTemplate">
-		<beans:constructor-arg name="sqlSessionFactory" 
-			ref="sessionFactory"/>
+		<beans:constructor-arg name="sqlSessionFactory" ref="sessionFactory"/>
 	</beans:bean>
 	
+	<beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<beans:property name="basePackage" value="com.spring.board.mapper" />
+	</beans:bean>
+
+
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Transaction Manager  설정 -->
-	<beans:bean id="txManager" 
-	class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<beans:bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<beans:property name="dataSource" ref="dataSource"/>
 	</beans:bean>
 	

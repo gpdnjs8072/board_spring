@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="member">
+<mapper namespace="com.spring.board.mapper.MemberMapper">
 	<!-- 회원가입 -->
 	<insert id="insert" parameterType="memberDto"> 
 		INSERT INTO member
@@ -63,19 +63,19 @@
 		WHERE mem_name=#{mem_name} and mem_email=#{mem_email}
 	</select>
 	<!-- 비밀번호 찾기 가능 -->
-	<select id="searchPwd" parameterType="MemberDto" resultType="String">
+	<select id="searchPwd" parameterType="memberDto" resultType="String">
 		SELECT mem_id
 		FROM member
 		WHERE mem_id=#{mem_id} and mem_name=#{mem_name} and mem_email=#{mem_email}
 	</select>
 	<!-- 새 비밀번호로 변경 -->
-	<update id="changePwd" parameterType="MemberDto">
+	<update id="changePwd" parameterType="memberDto">
 		UPDATE member
 		SET mem_pwd=#{mem_pwd}
 		WHERE mem_id=#{mem_id}
 	</update>
 	<!-- 회원 정보 수정 -->
-	<update id="updateMember" parameterType="MemberDto">
+	<update id="updateMember" parameterType="memberDto">
 		UPDATE member
 		SET mem_pwd=#{mem_pwd},mem_name=#{mem_name},mem_email=#{mem_email}
 		WHERE mem_id=#{mem_id}

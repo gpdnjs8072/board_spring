@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--  mybaits interface로 설정하기
+	1. servlet-context.xml 에서  <beans:property name="configLocation" value="/WEB-INF/spring/mybatis-config.xml"/>  와
+	   <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		  <beans:property name="basePackage" value="com.spring.board.mapper" />
+	   </beans:bean>  를 추가하기
+	 
+	2. spring/mybatis-config.xml 을 생성해 설정하기   
+	3. basePackage 의 경로에 mapper 인터페이스를 만들기
+	4. resources에서 mapper.xml 을 만들어 namespace는 인터페이스의 경로로 지정하기
+	5. Service 에서 사용할 때 mapper 인터페이스를 autowired 하고 메소드를 사용할 때 try-catch 문을 사용하기
+ -->
+<!-- mybatis 환경설정 -->
+<configuration>
+
+	<!-- 기본정보 셋팅 -->
+<!-- 	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="aggressiveLazyLoading" value="true" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+		<setting name="defaultStatementTimeout" value="300" />
+		<setting name="localCacheScope" value="SESSION" />
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		select 결과값이 null라도 key생성 
+		<setting name="callSettersOnNulls" value="true"/>
+	</settings> -->
+
+	<typeAliases>
+		<typeAlias type="com.spring.board.dto.MemberDto" alias="memberDto"/>
+  		<typeAlias type="com.spring.board.dto.BoardDto" alias="boardDto"/>
+  		<typeAlias type="com.spring.board.dto.FileDto" alias="fileDto"/> 
+	</typeAliases>
+
+	<mappers>
+  		<mapper resource="com/spring/board/resources/mapper/MemberMapper.xml"/>
+  		<mapper resource="com/spring/board/resources/mapper/BoardMapper.xml"/>
+  		<mapper resource="com/spring/board/resources/mapper/FileMapper.xml"/>
+  		<mapper resource="com/spring/board/resources/mapper/CodeMapper.xml"/>
+  	</mappers>	
+
+	<!-- 날짜관련 설정 -->
+	<!-- <typeHandlers>
+		<typeHandler
+			javaType="java.sql.Timestamp"
+			handler="com.jc.nexstore.core.mybatis.UtcDateTypeHandler" />
+		<typeHandler
+			javaType="java.sql.Time"
+			handler="com.jc.nexstore.core.mybatis.UtcDateTypeHandler" />
+		<typeHandler
+			javaType="java.sql.Date"
+			handler="com.jc.nexstore.core.mybatis.UtcDateTypeHandler" />
+	</typeHandlers> -->
+
+</configuration>

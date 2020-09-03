@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="file">
-	<insert id="insertFile" parameterType="fileDto">
+<mapper namespace="com.spring.board.mapper.FileMapper">
+	<insert id="insertFile" parameterType="com.spring.board.dto.FileDto">
 		INSERT INTO board_file
 		(file_num,board_num,file_writer,file_oriName,file_saveName,file_size,file_time)
 		VALUES(board_file_seq.NEXTVAL,#{board_num},#{file_writer},#{file_oriName},#{file_saveName},#{file_size},SYSDATE)
 	</insert>
-	<select id="getFile" parameterType="int" resultType="fileDto">
+	<select id="getFile" parameterType="int" resultType="com.spring.board.dto.FileDto">
 		SELECT file_num,file_oriName,file_saveName,file_size
 		FROM board_file
 		WHERE board_num=#{board_num}
 	</select>
-	<select id="getData" parameterType="int" resultType="fileDto">
+	<select id="getData" parameterType="int" resultType="com.spring.board.dto.FileDto">
 		SELECT file_num,file_oriName,file_saveName,file_size
 		FROM board_file
 		WHERE file_num=#{file_num}
 	</select>
-	<update id="update" parameterType="fileDto">
+	<update id="update" parameterType="com.spring.board.dto.FileDto">
 		update board_file
 		set file_saveName=#{file_saveName},file_oriName=#{file_oriName},file_size=#{file_size} 
 		where board_num=#{board_num}
@@ -29,5 +29,5 @@
 		SELECT file_num
 		FROM board_file
 		WHERE board_num=#{board_num}
-	</select>
+	</select> 
 </mapper>

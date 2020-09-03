@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.spring.board.dto.MemberDto;
 import com.spring.board.dto.PagingDto;
+import com.spring.board.mapper.MemberMapper;
 
 @Service
 @Repository
 public class MemAdminServiceImpl implements MemAdminService{
 	private static final Logger logger = LoggerFactory.getLogger(MemAdminServiceImpl.class);
 	@Autowired
-	SqlSession session;
+	MemberMapper mapper;
 
 	@Override
 	public void getList(HttpServletRequest request) {
@@ -54,27 +55,32 @@ public class MemAdminServiceImpl implements MemAdminService{
 		map.put("keyword", keyword);
 		map.put("mem_authCode",mem_authCode);
 		//해당 검색조건과 일치하는 목록의 갯수
-		int count=session.selectOne("member.count", map);  
+		int count;
+		try {
+			count = mapper.count( map);
+			// 페이지 나누기 관련 처리  PagingDto(count,curPage,페이지당 게시물 수 ,화면당 페이지수)
+			PagingDto pagingDto = new PagingDto(count, curPage,3,5);
+			int start = pagingDto.getPageBegin();
+			int end = pagingDto.getPageEnd();
+			map.put("start", start);
+			map.put("end", end);
+			List<MemberDto> list=mapper.selectMemberList(map);
+			
+			Map<String, Object> map2=new HashMap<String, Object>();
+			map2.put("list", list);
+			map2.put("count", count); // 레코드의 갯수
+			map2.put("searchOption", searchOption); // 검색옵션
+			map2.put("mem_authCode", mem_authCode); // 검색옵션
+			map2.put("keyword", keyword); // 검색키워드
+			map2.put("pagingDto", pagingDto);
+			map2.put("curPage", curPage);
+			
+			request.setAttribute("map2", map2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  
 		
 		
-		// 페이지 나누기 관련 처리  PagingDto(count,curPage,페이지당 게시물 수 ,화면당 페이지수)
-		PagingDto pagingDto = new PagingDto(count, curPage,3,5);
-		int start = pagingDto.getPageBegin();
-		int end = pagingDto.getPageEnd();
-		map.put("start", start);
-		map.put("end", end);
-		List<MemberDto> list=session.selectList("member.selectMemberList",map);
-		
-		Map<String, Object> map2=new HashMap<String, Object>();
-		map2.put("list", list);
-		map2.put("count", count); // 레코드의 갯수
-		map2.put("searchOption", searchOption); // 검색옵션
-		map2.put("mem_authCode", mem_authCode); // 검색옵션
-		map2.put("keyword", keyword); // 검색키워드
-		map2.put("pagingDto", pagingDto);
-		map2.put("curPage", curPage);
-		
-		request.setAttribute("map2", map2);
 		
 	}
 
@@ -94,8 +100,13 @@ public class MemAdminServiceImpl implements MemAdminService{
 		map.put("curPage", curPage);
 		request.setAttribute("map", map);
 		
-		MemberDto dto=session.selectOne("member.detailMember",mem_id);
-		request.setAttribute("dto", dto);
+		MemberDto dto;
+		try {
+			dto = mapper.detailMember(mem_id);
+			request.setAttribute("dto", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -115,8 +126,12 @@ public class MemAdminServiceImpl implements MemAdminService{
 		map.put("curPage", curPage);
 		request.setAttribute("map", map);
 		
-		session.selectOne("member.updateCode",dto);
-		logger.info("회원 상태/권한 변경 : 아이디-"+dto.getMem_id());
+		try {
+			mapper.updateCode(dto);
+			logger.info("회원 상태/권한 변경 : 아이디-"+dto.getMem_id());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	
